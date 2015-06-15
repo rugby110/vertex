@@ -1,0 +1,12 @@
+~$*
+._*
+*~
+#*
+atlassian-ide-plugin.xml
+*.bak
+.DS_Store
+.idea
+REVISION
+*.phar
+vendor/
+
