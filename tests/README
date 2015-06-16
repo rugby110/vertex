@@ -1,0 +1,11 @@
+Setup:
+* composer needs to be installed and runnable from the command prompt
+* in the vertex directory run "composer install".  This should create a "vendor" directory and pull in
+  required dependencies
+
+Running Tests:
+* tests can be run from the vertex directory using the phpunit executable that composer downloads
+  into the vendor directory:
+
+  van@van-dev-vm:vertex$ vendor/bin/phpunit tests/facts/someTest.php
+
