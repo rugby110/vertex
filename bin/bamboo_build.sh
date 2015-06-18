@@ -15,4 +15,7 @@ set -xe
 # Main
 begin ": vertex build"
 
+# Run composer
+run_composer
+
 exit 0

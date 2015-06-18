@@ -10,4 +10,13 @@ source $script_dir/bamboo_functions.sh
 # Main
 begin ": vertex deployment"
 
+# Run composer
+run_composer
+
+# Run migrations
+run_mpm_migrations
+
+# Apply all the Views from src/sql
+run_ddl
+
 exit 0

@@ -32,6 +32,16 @@ set -xe
 
 begin ": vertex deployment"
 
+# Grab any variables from environment, including secrets
 
+# any other prep of local working dir?
+
+# Copy code to nodes -- no-op for Vertex
+
+# Run migrations
+run_mpm_migrations
+
+# Apply all the new Views from src/sql
+run_ddl
 
 exit 0
