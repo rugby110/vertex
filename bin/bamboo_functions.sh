@@ -7,7 +7,7 @@
 
 # invoke composer
 run_composer () {
-
+	/usr/local/bin/composer.phar install
 }
 
 # invoke mpm
