@@ -19,8 +19,10 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $DIR/environment_variables.local.sh
 
 # the VSQL variable should not need overrides since they are defined in terms of vertex_vertica variables
-VSQL_DATABASE=$vertex_vertica_database
-VSQL_HOST=$vertex_vertica_host
-VSQL_PORT=$vertex_vertica_port
-VSQL_USER=$vertex_vertica_user
-VSQL_PASSWORD=$vertex_vertica_password
+export VSQL_DATABASE=$vertex_vertica_database
+export VSQL_HOST=$vertex_vertica_host
+export VSQL_PORT=$vertex_vertica_port
+export VSQL_USER=$vertex_vertica_user
+export VSQL_PASSWORD=$vertex_vertica_password
+
+

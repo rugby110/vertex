@@ -13,5 +13,5 @@ find $DIR/../src/sql -name \*.sql | while read sql_file; do
     echo "Processing file '$sql_file'"
     echo "set search_path to $vertex_vertica_target_schema;"|cat - $sql_file > /tmp/out.sql
     #cat /tmp/out.sql
-    vsql -h $VSQL_HOST -p $VSQL_PORT -U $VSQL_USER -w $VSQL_PASSWORD -d $VSQL_DATABASE -f /tmp/out.sql
+    vsql -f /tmp/out.sql
 done
