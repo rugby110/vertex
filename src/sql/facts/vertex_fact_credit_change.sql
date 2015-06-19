@@ -1,4 +1,3 @@
-set search_path to van_sandbox, sandbox, public, v_catalog, v_monitor, v_internal;
 create or replace view vertex_fact_credit_change as 
 WITH credit_change_types_to_fix as ( 
         SELECT
@@ -59,8 +58,8 @@ left join verse_qa.verse_ods_kiva_transaction trans on trans.id = cc.trans_id
 left join verse_qa.verse_dim_fund_account dfa on fa.id = dfa.fund_account_id
 inner join verse_qa.verse_dim_credit_change_type dcct on dcct.credit_change_type_id = 
 	case
-	       when cc.type_id=23 // loan_purchase 
-	               and cc.changer_id=0 then 78 // loan_purchase_auto
+	       when cc.type_id=23 -- loan_purchase 
+	               and cc.changer_id=0 then 78 -- loan_purchase_auto
 	       else cc.type_id
 	end;
 	
