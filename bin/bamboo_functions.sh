@@ -21,3 +21,21 @@ run_ddl () {
 
 	echo "TODO: run DDL statements"
 }
+
+exit_handler () {
+  exit_code=$?
+  set +xe
+  echo "#################"
+  echo "exiting"
+
+  case $exit_code in
+    0) echo "SUCCESSFUL $(basename $0)"
+       ;;
+    11) echo "ABORTED $(basename $0), LOCK IN PLACE"
+       ;;
+    *) echo "PROBLEMS WITH DEPLOYMENT $(basename $0), exit code $exit_code, check logs"
+       ;;
+  esac
+
+  exit $exit_code
+}
