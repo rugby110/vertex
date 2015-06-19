@@ -9,4 +9,5 @@ atlassian-ide-plugin.xml
 REVISION
 *.phar
 vendor/
+environment_variables.local.sh
 
