@@ -1,1 +1,3 @@
 Utility scripts and continuous integration scripts go in this directory.
+
+Use 'local_deploy.sh' to do everything needed to install the code in a development environment.
