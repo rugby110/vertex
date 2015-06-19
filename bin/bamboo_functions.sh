@@ -24,6 +24,10 @@ run_ddl () {
 	echo "TODO: run DDL statements"
 }
 
+run_tests () {
+	./vendor/bin/phpunit tests
+}
+
 exit_handler () {
   exit_code=$?
   set +xe

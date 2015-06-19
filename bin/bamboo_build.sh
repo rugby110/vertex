@@ -18,4 +18,7 @@ set -xe
 # Run composer
 run_composer
 
+# Run the test from here, rather than as a separate Bamboo task
+run_tests
+
 exit 0
