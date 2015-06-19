@@ -30,7 +30,7 @@ set -xe
 
 # Main
 
-begin ": vertex deployment"
+#begin ": vertex deployment"
 
 # Grab any variables from environment, including secrets
 

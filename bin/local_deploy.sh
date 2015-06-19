@@ -8,7 +8,7 @@ script_dir=$(dirname $0)
 source $script_dir/bamboo_functions.sh
 
 # Main
-begin ": vertex deployment"
+#begin ": vertex deployment"
 
 # Run composer
 run_composer
