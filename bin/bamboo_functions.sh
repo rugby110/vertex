@@ -5,9 +5,11 @@
 # Description:  functions used by the bamboo_*.sh scripts.  Kept here
 #               to make the scripts themselves more simple and more readable.
 
+composer="php -d allow_url_fopen=1 /usr/local/bin/composer.phar"
+
 # invoke composer
 run_composer () {
-	/usr/local/bin/composer.phar install
+	$composer validate && $composer install && $composer dump-autoload --optimize
 }
 
 # invoke mpm
