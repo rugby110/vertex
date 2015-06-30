@@ -4,13 +4,13 @@
 # see https://confluence.kiva.org/display/BRAIN/Vertex+Developer+Setup for details on setting up a tunnel
 #  from a dev vm to Vertica
 
-vertex_vertica_database=verse
-vertex_vertica_host=localhost
-vertex_vertica_port=3322
-vertex_vertica_user=override_me
-vertex_vertica_password=override_me
+export vertex_vertica_database=verse
+export vertex_vertica_host=localhost
+export vertex_vertica_port=3322
+export vertex_vertica_user=override_me
+export vertex_vertica_password=override_me
 # the target schema will be '<username>_sandbox' for developers and 'vertex' for dev and production
-vertex_vertica_target_schema=override_me
+export vertex_vertica_target_schema=override_me
 
 # get the directory where this script and the override script are
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
