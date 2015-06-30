@@ -16,7 +16,11 @@ vertex_vertica_target_schema=override_me
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 # use the environment_variables.local.sh file to override vertex_vertica_user, password and any other variables above
-source $DIR/environment_variables.local.sh
+if [[ -f $DIR/environment_variables.local.sh ]]; then
+	source $DIR/environment_variables.local.sh
+else
+	echo "You probably want to set some variables in ${DIR}/environment_variables.local.sh"
+fi
 
 # the VSQL variable should not need overrides since they are defined in terms of vertex_vertica variables
 export VSQL_DATABASE=$vertex_vertica_database

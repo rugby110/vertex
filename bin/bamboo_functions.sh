@@ -5,6 +5,9 @@
 # Description:  functions used by the bamboo_*.sh scripts.  Kept here
 #               to make the scripts themselves more simple and more readable.
 
+# make sure we have the environment variables we need
+source ${script_dir}/../conf/environment_variables.sh
+
 composer="php -d allow_url_fopen=1 /usr/local/bin/composer.phar"
 
 # invoke composer
@@ -20,8 +23,14 @@ run_mpm_migrations () {
 # for all the DDL sql in src/sql, apply to vertica
 run_ddl () {
 	# future: take a param to only do a subset of src/sql
-
-	echo "TODO: run DDL statements"
+	echo "running DDL statements"
+	which vsql || echo "No vsql found!"
+	find ${script_dir}/../src/sql -name \*.sql | while read sql_file; do
+		echo "Processing file '$sql_file'"
+		echo "set search_path to $vertex_vertica_target_schema;"|cat - $sql_file > /tmp/out.sql
+		#cat /tmp/out.sql
+		vsql -f /tmp/out.sql
+	done
 }
 
 run_tests () {
