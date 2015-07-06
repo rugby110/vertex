@@ -16,17 +16,17 @@ class PdoTest extends PHPUnit_Framework_TestCase {
 		$this->user = getenv("vertex_vertica_user");
 		$this->pwd = getenv("vertex_vertica_password");
 
-		echo "about to connect\n";
-
 		try {
 			$this->db = new PDO('odbc:vertica', $this->user, $this->pwd);
 		} catch (PDOException $e) {
 			echo $e->getMessage() . "\n";
 		}
+		echo "about to connect\n";
+
 	}
 
 	public function tearDown() {
-		$conn = null;
+		$this->db = null;
 	}
 
 	protected function assertPreconditions() {
@@ -39,17 +39,9 @@ class PdoTest extends PHPUnit_Framework_TestCase {
 
 
 		echo "connected\n";
-		try {
-			$result = $this->db->query("select country_id, name from verse_qa.verse_dim_country order by name limit 10");
-		} catch (Exception $e) {
-			echo $e->getMessage() . "\n";
-		}
+		$result = $this->db->query("select country_id, name from verse_qa.verse_dim_country order by name limit 10");
 
-		echo "queried\n";
-		foreach($result as $row) {
-			echo $row['name'] . "  " . $row['country_id'] .  "\n";
-
-		}
+		$this->assertCount(10,$result->fetchAll());
 	}
 }
 
