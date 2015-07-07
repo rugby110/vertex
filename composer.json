@@ -11,5 +11,12 @@
   ],
   "require": {
     "phpunit/phpunit": "4.*"
+  },
+  "autoload": {
+      "psr-4": {
+          "Kiva\\Vertex\\":        "src/",
+          "Kiva\\Vertex\\Testing\\": "tests/"
+      }
   }
+
 }
