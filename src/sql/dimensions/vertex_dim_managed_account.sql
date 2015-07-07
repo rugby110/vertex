@@ -1,4 +1,4 @@
-create or replace view dim_managed_account as
+create or replace view vertex_dim_managed_account as
 
 select TO_CHAR(ma.fund_account_id) || TO_CHAR('_') || COALESCE(TO_CHAR(pf.id), 'NA') as managed_account_id,
 			ma.fund_account_id as fund_account_id,
