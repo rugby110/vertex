@@ -17,7 +17,6 @@ class PdoTest extends Kiva\Vertex\Testing\VertexTestCase {
 
 	public function testPDO() {
 		$query = "select country_id, name from " . $this->reference_schema . ".verse_dim_country order by name limit 10";
-		echo "$query\n";
 		$result = $this->db->query($query);
 
 		$this->assertCount(10,$result->fetchAll());
