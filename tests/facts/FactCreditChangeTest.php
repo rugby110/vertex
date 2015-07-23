@@ -16,7 +16,7 @@ class FactCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCase {
 		$result = $this->db->query("select count(1) as how_many from $this->reference_schema.verse_ods_kiva_credit_change");
 		$count_from_ods = $result->fetchColumn();
 
-		echo "count from fact: " . $count_from_fact . " count from ods: $count_from_ods\n";
+		//echo "count from fact: " . $count_from_fact . " count from ods: $count_from_ods\n";
 
 		$this->assertEquals($count_from_ods,$count_from_fact);
 	}
