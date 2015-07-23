@@ -10,13 +10,19 @@ class PdoTest extends PHPUnit_Framework_TestCase {
 	private $user;
 	private $pwd;
 	private $db;
+	private $verse_schema;
+	private $odbc_dsn;
 
 	public function setUp() {
 		$this->user = getenv("vertex_vertica_user");
 		$this->pwd = getenv("vertex_vertica_password");
+		$this->verse_schema = getenv("vertex_vertica_verse_schema");
+		$this->odbc_dsn = getenv("vertex_vertica_odbc_dsn");
+
+		print("DSN: " . $this->odbc_dsn . "\n");
 
 		try {
-			$this->db = new PDO('odbc:vertica', $this->user, $this->pwd);
+			$this->db = new PDO("odbc:" . $this->odbc_dsn, $this->user, $this->pwd);
 		} catch (PDOException $e) {
 			echo $e->getMessage() . "\n";
 		}
@@ -35,10 +41,9 @@ class PdoTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testPDO() {
-
-
-		echo "connected\n";
-		$result = $this->db->query("select country_id, name from verse_qa.verse_dim_country order by name limit 10");
+		$query = "select country_id, name from " . $this->verse_schema . ".verse_dim_country order by name limit 10";
+		echo "$query\n";
+		$result = $this->db->query($query);
 
 		$this->assertCount(10,$result->fetchAll());
 	}

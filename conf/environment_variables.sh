@@ -5,6 +5,8 @@
 #  from a dev vm to Vertica
 
 export vertex_vertica_database=verse
+export vertex_vertica_verse_schema=verse
+export vertex_vertica_odbc_dsn=vertex_dev
 export vertex_vertica_host=localhost
 export vertex_vertica_port=3322
 export vertex_vertica_user=override_me
