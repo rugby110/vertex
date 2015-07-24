@@ -1,4 +1,14 @@
 create or replace view vertex_dim_login as
+with facebook_info as (
+select 	
+        user_id,
+        status as facebook_connect_status,
+	create_time as facebook_connect_time
+from
+        verse.verse_ods_kiva_facebook_user
+group by
+        user_id,status,create_time
+)
 select
 	l.id as login_id,
 	lfam.fund_account_id as default_fund_account_id,
@@ -30,22 +40,18 @@ select
 	com.nonlender_reminder, 
 	com.loan_comment, 
 	com.sendRepaymentNotifications,  
-	com.sendAutolendingNotifications
-
+	com.sendAutolendingNotifications,
+	-- facebook
+	face.facebook_connect_status,
+	face.facebook_connect_time
+	
 from verse.verse_ods_kiva_login l
 inner join verse.verse_ods_kiva_login_fund_account_mapper lfam on l.id = lfam.login_id
 inner join verse.verse_ods_kiva_fund_account fa on lfam.fund_account_id = fa.id
 left join verse.verse_ods_kiva_person person on  l.person_id = person.id
 left join verse.verse_ods_kiva_communication_settings com on com.login_id = l.id
+left join facebook_info face on face.user_id = l.id
 where lfam.is_default_account = 'yes'
 	and fa.type_id = 1 -- LENDER_FUND_ACCOUNT_TYPE_ID
---limit 10
-/*
-select count(*)
-from verse.verse_ods_kiva_login l
-where l.username like 'KivaCorporateUser%'
 
-select count(*)
-from vertex_dim_login l
-where is_corporate=true
-*/
+
