@@ -33,42 +33,41 @@ DROP TABLE IF EXISTS vertex_dim_datetime_day;
 
 CREATE TABLE vertex_dim_datetime_day ( 
      id         INT,
-     date       TIMESTAMP,     
+     full_date  TIMESTAMP,     
      full_time  INT,
      year       INT, 
      quarter    INT,
      month      INT, 
      week       INT,
      day        INT, 
-     year_label                 char(4),
-     quarter_label_short        char(1),
-     quarter_label_long         char(2),
-     quarter_label_human        char(10),
-     month_label_short          char(3),
-     month_label_long           char(10),
-     month_label_human          char(10),
-     week_label_short           char(10),
-     week_label_long            char(20),
-     week_label_human           char(20),
-     day_label_short            char(3),
-     day_label_long             char(20),
-     day_label_human            char(20),
-     full_date                  char(20),
+     year_label                 varchar,
+     quarter_label_short        varchar,
+     quarter_label_long         varchar,
+     quarter_label_human        varchar,
+     month_label_short          varchar,
+     month_label_long           varchar,
+     month_label_human          varchar,
+     week_label_short           varchar,
+     week_label_long            varchar,
+     week_label_human           varchar,
+     day_label_short            varchar,
+     day_label_long             varchar,
+     day_label_human            varchar,
      day_in_week                int,
      is_last_day_in_month       boolean,
-     day_name_short             char(3),
-     day_name_long              char(10),
+     day_name_short             varchar,
+     day_name_long              varchar,
      is_first_day_in_week       boolean,
      is_last_day_in_week        boolean,
      is_weekend                 boolean,
-     yearquarter                int,
-     yearquartermonth           int
+     year_quarter               int,
+     year_quarter_month         int
 );
 
 -- populate the datetime table by joining on the numbers table
 INSERT INTO vertex_dim_datetime_day (
         id, 
-        date, 
+        full_date, 
         full_time, 
         year, quarter, month, week, day, 
         year_label,
@@ -76,15 +75,14 @@ INSERT INTO vertex_dim_datetime_day (
         month_label_short,      month_label_long,       month_label_human,
         week_label_short,       week_label_long,        week_label_human,
         day_label_short,        day_label_long,         day_label_human,
-        full_date, 
         day_in_week,
         is_last_day_in_month,
         day_name_short, day_name_long,
         is_first_day_in_week,
         is_last_day_in_week,
         is_weekend,
-        yearquarter,
-        yearquartermonth
+        year_quarter,
+        year_quarter_month
         )
 SELECT YEAR(a.date)*10000 + MONTH(a.date)*100 + DAY(a.date),
        a.date,
@@ -99,10 +97,10 @@ SELECT YEAR(a.date)*10000 + MONTH(a.date)*100 + DAY(a.date),
        'Q'|| TO_CHAR(a.date,'Q'),
        TO_CHAR(a.date,'YYYY') || '-Q'||TO_CHAR(a.date,'Q'),
        TO_CHAR(a.date,'Mon'),
-       TO_CHAR(a.date,'Month'),
+       TRIM(TO_CHAR(a.date,'Month')),
        TO_CHAR(a.date,'YYYY') || '-'||TO_CHAR(a.date,'Mon'),
        TO_CHAR(a.date,'Mon') || ' ' || TO_CHAR(a.date, 'WW'),
-       TO_CHAR(a.date,'Month') || ' ' || TO_CHAR(a.date, 'WW'),
+       TRIM(TO_CHAR(a.date,'Month')) || ' ' || TO_CHAR(a.date, 'WW'),
        TO_CHAR(a.date,'YYYY') || '-'||TO_CHAR(a.date,'Mon') || '-' || TO_CHAR(a.date, 'WW') || ' wk',
        TO_CHAR(a.date,'DD'),
        CASE WHEN DAY(a.date) < 10 THEN RIGHT(TO_CHAR(a.date,'DD'),1) -- trim to '1' from '01'
@@ -114,14 +112,14 @@ SELECT YEAR(a.date)*10000 + MONTH(a.date)*100 + DAY(a.date),
                 ELSE 'th'
            END,
        TO_CHAR(a.date,'YYYY') || '-'||TO_CHAR(a.date,'Mon') || '-' || TO_CHAR(a.date, 'DD'),
-       TO_CHAR(a.date,'YYYY') || '-'||TO_CHAR(a.date,'MM') || '-' || TO_CHAR(a.date, 'DD'),
+       --TO_CHAR(a.date,'YYYY') || '-'||TO_CHAR(a.date,'MM') || '-' || TO_CHAR(a.date, 'DD'),
        -- in Vertica, DAYOFWEEK returns Sunday=1, Monday=2, so adjust to get Monday=1, Sunday=7 
        CASE WHEN DAYOFWEEK(a.date) - 1 > 0 THEN DAYOFWEEK(a.date) - 1
             ELSE 7 -- for Sunday
        END,
        DAY(a.date) = DAY(LAST_DAY(a.date)), -- LAST_DAY returns the last day of the month for the date passed in
        TO_CHAR(a.date, 'Dy'),
-       TO_CHAR(a.date, 'Day'),
+       TRIM(TO_CHAR(a.date, 'Day')),
        DAYOFWEEK(a.date)-1 = 1,
        DAYOFWEEK(a.date)-1 = 0,
        DAYOFWEEK(a.date)-1 = 6 or DAYOFWEEK(a.date)-1 = 0,
@@ -131,8 +129,3 @@ FROM  (SELECT TIMESTAMPADD(dd, number, '2004-12-31') AS date
        FROM   numbers 
        ORDER  BY number 
        LIMIT  18250) a; -- 50 years of dates (50*365) from 2005-01-01
-       
-select * 
-from vertex_dim_datetime_day
-order by id
-limit 100;
