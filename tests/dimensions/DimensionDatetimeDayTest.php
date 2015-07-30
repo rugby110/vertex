@@ -20,7 +20,6 @@ class DimensionDatetimeDayTest extends Kiva\Vertex\Testing\VertexTestCase {
 	public function testSampleEntry() {
 		$result = $this->db->query("select * from " . $this->vertex_schema . ".vertex_dim_datetime_day where id = 20050403");
 		$row= $result->fetch(PDO::FETCH_ASSOC);
-		// 	false	true	true	200502	20050204
 
 		$this->assertEquals(20050403,$row['id']);
 		$this->assertEquals(1112486400,$row['full_time']);
