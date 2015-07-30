@@ -112,7 +112,6 @@ SELECT YEAR(a.date)*10000 + MONTH(a.date)*100 + DAY(a.date),
                 ELSE 'th'
            END,
        TO_CHAR(a.date,'YYYY') || '-'||TO_CHAR(a.date,'Mon') || '-' || TO_CHAR(a.date, 'DD'),
-       --TO_CHAR(a.date,'YYYY') || '-'||TO_CHAR(a.date,'MM') || '-' || TO_CHAR(a.date, 'DD'),
        -- in Vertica, DAYOFWEEK returns Sunday=1, Monday=2, so adjust to get Monday=1, Sunday=7 
        CASE WHEN DAYOFWEEK(a.date) - 1 > 0 THEN DAYOFWEEK(a.date) - 1
             ELSE 7 -- for Sunday
