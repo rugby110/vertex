@@ -24,7 +24,7 @@ run_mpm_migrations () {
 run_ddl () {
 	# future: take a param to only do a subset of src/sql
 	echo "running DDL statements"
-	which vsql || echo "No vsql found!"
+	which vsql || (echo "No vsql found!"; exit 1)
 	find ${script_dir}/../src/sql -name \*.sql | while read sql_file; do
 		echo "Processing file '$sql_file'"
 		echo "set search_path to $vertex_vertica_target_schema;"|cat - $sql_file > /tmp/out.sql
