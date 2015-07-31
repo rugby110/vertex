@@ -2,12 +2,11 @@ create or replace view vertex_dim_fund_account as
 
 select lfam.login_id as owner_login_id,
 	fa.id as fund_account_id,
-	fa.name,
 	uat.id as user_account_type_id, -- The user_account_type_id is selected again for naming convention, to help with dimension column. This actually higlight poor name in KIVA db as well. user_account_type should really be user_account_type_id
 	uat.name as user_account_type,
 	src_fund.name as source_of_funds,
 	fa.accounting_category,
-	dac.v_id as dim_accounting_category_id,
+	dac.id as accounting_category_id,
 	lfam.is_default_account,
 	fa.create_time,
 	fa.donate_on_repayment='yes' as donate_on_repayment,
@@ -27,13 +26,13 @@ select lfam.login_id as owner_login_id,
 	fid.kivapool_match_first_item_id
 
 
-from verse_ods_kiva_fund_account fa
-inner join verse_ods_kiva_login_fund_account_mapper lfam on fa.id = lfam.fund_account_id
-inner join verse_dim_accounting_category dac on dac.accounting_category = fa.accounting_category -- do we still need dim_accounting_category_id??
-left join verse_ods_kiva_user_account_type uat on fa.user_account_type = uat.id
-left join verse_ods_kiva_source_of_funds src_fund on fa.source_of_funds = src_fund.id
-left join verse_ods_kiva_contact_info contact_info on contact_info.id=fa.billing_contact_id
-left join verse_ods_kiva_geo_state_codes geo_state_codes on geo_state_codes.postal_code = contact_info.state and contact_info.country_id = 227
+from verse.verse_ods_kiva_fund_account fa
+inner join verse.verse_ods_kiva_login_fund_account_mapper lfam on fa.id = lfam.fund_account_id
+inner join vertex_dim_accounting_category dac on dac.accounting_category = fa.accounting_category -- do we still need dim_accounting_category_id??
+left join verse.verse_ods_kiva_user_account_type uat on fa.user_account_type = uat.id
+left join verse.verse_ods_kiva_source_of_funds src_fund on fa.source_of_funds = src_fund.id
+left join verse.verse_ods_kiva_contact_info contact_info on contact_info.id=fa.billing_contact_id
+left join verse.verse_ods_kiva_geo_state_codes geo_state_codes on geo_state_codes.postal_code = contact_info.state and contact_info.country_id = 227
 
 -- portfolio aggregates:
 left join (select fa.id as fund_account_id,
@@ -41,33 +40,34 @@ left join (select fa.id as fund_account_id,
 			sum(llp.purchase_amt)          as current_portfolio_total,
 			sum((llp.purchase_amt/l.price_usd) * (l.price_usd-settled_total)) as e_current_portfolio_outstanding,
 			sum((llp.purchase_amt/l.price_usd) * (settled_total))             as e_current_portfolio_repaid
-        from verse_ods_kiva_fund_account fa
-        inner join verse_ods_kiva_lender_loan_purchase llp on llp.lender_fund_account_id=fa.id
-        inner join verse_dim_fund_account dim_fa on fa.id = dim_fa.fund_account_id
-        inner join verse_dim_loan l on l.loan_id=llp.loan_id and l.status in ('payingBack','raised','fundRaising')
+        from verse.verse_ods_kiva_fund_account fa
+        inner join verse.verse_ods_kiva_lender_loan_purchase llp on llp.lender_fund_account_id=fa.id
+        inner join verse.verse_dim_fund_account dim_fa on fa.id = dim_fa.fund_account_id
+        inner join verse.verse_dim_loan l on l.loan_id=llp.loan_id and l.status in ('payingBack','raised','fundRaising')
         group by fa.id) port on port.fund_account_id = fa.id
 
+        
 -- first_item_ids:
-left join ( select fund_account_id,
+left join ( select fund_account_id, 
         max(case when type_name = 'fundpool_match'
             then item_id end) as fundpool_match_first_item_id,
         max(case when type_name = 'kivapool_match'
-            then item_id end) as kivapool_match_first_item_id
-
+            then item_id end) as kivapool_match_first_item_id   
+   
         from (
-
-         select fund_account_id, dim_credit_change_type_id as type_id, cct.type_name, item_id, effective_time, min(effective_time)
+     
+         select fund_account_id, dim_credit_change_type_id as type_id, cct.type_name, item_id, effective_time, min(effective_time) 
          over (partition by fund_account_id, dim_credit_change_type_id) min_eff_time
-         from verse_fact_credit_change cc
-         inner join verse_dim_credit_change_type cct on cc.dim_credit_change_type_id = cct.v_id
-         where dim_credit_change_type_id in
+         from verse.verse_fact_credit_change cc
+         inner join verse.verse_dim_credit_change_type cct on cc.dim_credit_change_type_id = cct.v_id
+         where dim_credit_change_type_id in 
                 (select v_id
-                from verse_dim_credit_change_type
+                from verse.verse_dim_credit_change_type 
                 where type_name in ('fundpool_match','kivapool_match'))
          ) min_times
-
+        
         where effective_time = min_eff_time
 
-        group by fund_account_id ) fid  on fid.fund_account_id = fa.id
-
-where lfam.is_owner = 'yes';
+        group by fund_account_id ) fid  on fid.fund_account_id = fa.id    
+			
+where lfam.is_owner = 'yes' ;
