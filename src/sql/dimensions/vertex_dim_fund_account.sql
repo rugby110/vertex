@@ -28,7 +28,7 @@ select lfam.login_id as owner_login_id,
 
 from verse.verse_ods_kiva_fund_account fa
 inner join verse.verse_ods_kiva_login_fund_account_mapper lfam on fa.id = lfam.fund_account_id
-inner join vertex_dim_accounting_category dac on dac.accounting_category = fa.accounting_category -- do we still need dim_accounting_category_id??
+inner join vertex_dim_accounting_category dac on dac.accounting_category = fa.accounting_category
 left join verse.verse_ods_kiva_user_account_type uat on fa.user_account_type = uat.id
 left join verse.verse_ods_kiva_source_of_funds src_fund on fa.source_of_funds = src_fund.id
 left join verse.verse_ods_kiva_contact_info contact_info on contact_info.id=fa.billing_contact_id
@@ -42,7 +42,7 @@ left join (select fa.id as fund_account_id,
 			sum((llp.purchase_amt/l.price_usd) * (settled_total))             as e_current_portfolio_repaid
         from verse.verse_ods_kiva_fund_account fa
         inner join verse.verse_ods_kiva_lender_loan_purchase llp on llp.lender_fund_account_id=fa.id
-        inner join verse.verse_dim_fund_account dim_fa on fa.id = dim_fa.fund_account_id
+        inner join vertex_dim_fund_account dim_fa on fa.id = dim_fa.fund_account_id
         inner join verse.verse_dim_loan l on l.loan_id=llp.loan_id and l.status in ('payingBack','raised','fundRaising')
         group by fa.id) port on port.fund_account_id = fa.id
 
@@ -58,7 +58,7 @@ left join ( select fund_account_id,
      
          select fund_account_id, dim_credit_change_type_id as type_id, cct.type_name, item_id, effective_time, min(effective_time) 
          over (partition by fund_account_id, dim_credit_change_type_id) min_eff_time
-         from verse.verse_fact_credit_change cc
+         from vertex_fact_credit_change cc
          inner join verse.verse_dim_credit_change_type cct on cc.dim_credit_change_type_id = cct.v_id
          where dim_credit_change_type_id in 
                 (select v_id
