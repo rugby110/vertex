@@ -26,10 +26,14 @@ run_ddl () {
 	echo "running DDL statements"
 	which vsql || (echo "No vsql found!"; exit 1)
 	find ${script_dir}/../src/sql -name \*.sql | while read sql_file; do
-		echo "Processing file '$sql_file'"
-		echo "set search_path to $vertex_vertica_target_schema;"|cat - $sql_file > /tmp/out.sql
+	    if grep --quiet VERTEX_NO_DEPLOY $sql_file; then
+		echo "Skipping '$sql_file' with VERTEX_NO_DEPLOY tag"
+	    else
+		echo "Deploying file '$sql_file'"
+		echo "set search_path to $vertex_vertica_vertex_schema;SET SESSION AUTOCOMMIT TO on;"|cat - $sql_file > /tmp/out.sql
 		#cat /tmp/out.sql
 		vsql -f /tmp/out.sql
+	    fi
 	done
 }
 

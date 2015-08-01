@@ -1,3 +1,4 @@
+--VERTEX_NO_DEPLOY
 create or replace view vertex_fact_promo_impact_accounts as
 
 select  llp.lender_fund_account_id as acquired_fund_account_id, lfam.login_id as acquired_login_id, ma.fund_account_id as managed_account_id, ma.management_type as promo_type,

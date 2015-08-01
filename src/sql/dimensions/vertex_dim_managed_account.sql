@@ -1,3 +1,4 @@
+--VERTEX_NO_DEPLOY
 create or replace view vertex_dim_managed_account as
 
 select TO_CHAR(ma.fund_account_id) || TO_CHAR('_') || COALESCE(TO_CHAR(pf.id), 'NA') as managed_account_id,

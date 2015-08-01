@@ -1,3 +1,4 @@
+--VERTEX_NO_DEPLOY
 create or replace view vertex_fact_promo_impact as
 
 select pi.managed_account_id, pi.acquired_fund_account_id, pi.acquired_login_id, pi.promo_type, pi.acquired_time, pi.acquired_day_id, pi.is_existing_user, pi.is_existing_lender, pi.is_existing_depositor, pi.is_existing_donor, pi.is_existing_card_purchaser, pi.promo_amt_required/ma.promo_price as num_redeemed_per_user,
