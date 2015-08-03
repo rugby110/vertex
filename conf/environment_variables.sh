@@ -32,4 +32,5 @@ export VSQL_PORT=$vertex_vertica_port
 export VSQL_USER=$vertex_vertica_user
 export VSQL_PASSWORD=$vertex_vertica_password
 
-
+# make sure the usual vsql directory is in the path
+export PATH=$PATH:/opt/vertica/bin
