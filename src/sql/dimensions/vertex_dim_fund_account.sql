@@ -42,7 +42,6 @@ left join (select fa.id as fund_account_id,
 			sum((llp.purchase_amt/l.price_usd) * (settled_total))             as e_current_portfolio_repaid
         from verse.verse_ods_kiva_fund_account fa
         inner join verse.verse_ods_kiva_lender_loan_purchase llp on llp.lender_fund_account_id=fa.id
-        inner join vertex_dim_fund_account dim_fa on fa.id = dim_fa.fund_account_id
         inner join verse.verse_dim_loan l on l.loan_id=llp.loan_id and l.status in ('payingBack','raised','fundRaising')
         group by fa.id) port on port.fund_account_id = fa.id
 
