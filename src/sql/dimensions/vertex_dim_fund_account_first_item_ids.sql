@@ -2,9 +2,9 @@
 create or replace view vertex_dim_fund_account_first_item_ids as
 
 select fund_account_id, 
-  min(case when type_name = 'fundpool_match'
+  min(case when type_name = 'fundpool_match' and effective_time = min_eff_time
     then item_id end) as fundpool_match_first_item_id,
-  min(case when type_name = 'kivapool_match'
+  min(case when type_name = 'kivapool_match' and effective_time = min_eff_time
     then item_id end) as kivapool_match_first_item_id   
    
   from ( select fund_account_id, dim_credit_change_type_id as type_id, cct.type_name, item_id, effective_time, min(effective_time) 
