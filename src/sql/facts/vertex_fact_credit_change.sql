@@ -40,7 +40,7 @@ select
 	       WHEN cc.changer_id=cc.fund_account_id THEN 'user'
 	       ELSE 'admin'
 	END as changer_type,
-        dcct.v_id as dim_credit_change_type_id,
+        dcct.id as dim_credit_change_type_id,
 	cc.price,
 	cc.create_time,
 	TO_NUMBER(TO_CHAR(TO_TIMESTAMP(cc.create_time), 'YYYYMMDD')) as create_day_id,
@@ -50,13 +50,13 @@ select
 	cc.ref_id,
 	cc.new_balance,
 	fa.user_account_type, 
-	dfa.dim_accounting_category_id
+	dfa.accounting_category_id
 from
         verse.verse_ods_kiva_credit_change cc
 left join verse.verse_ods_kiva_fund_account fa on fa.id = fund_account_id
 left join verse.verse_ods_kiva_transaction trans on trans.id = cc.trans_id
-left join verse.verse_dim_fund_account dfa on fa.id = dfa.fund_account_id
-inner join verse.verse_dim_credit_change_type dcct on dcct.credit_change_type_id = 
+left join vertex_dim_fund_account dfa on fa.id = dfa.fund_account_id
+inner join vertex_dim_credit_change_type dcct on dcct.id = 
 	case
 	       when cc.type_id=23 -- loan_purchase 
 	               and cc.changer_id=0 then 78 -- loan_purchase_auto

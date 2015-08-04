@@ -21,9 +21,9 @@ select lfam.login_id as owner_login_id,
 	port.current_portfolio_num,
 	port.current_portfolio_total,
 	port.e_current_portfolio_outstanding,
-	port.e_current_portfolio_repaid,
-	fid.fundpool_match_first_item_id,
-	fid.kivapool_match_first_item_id
+	port.e_current_portfolio_repaid
+--	fid.fundpool_match_first_item_id,
+--	fid.kivapool_match_first_item_id
 
 
 from verse.verse_ods_kiva_fund_account fa
@@ -45,9 +45,10 @@ left join (select fa.id as fund_account_id,
         inner join verse.verse_dim_loan l on l.loan_id=llp.loan_id and l.status in ('payingBack','raised','fundRaising')
         group by fa.id) port on port.fund_account_id = fa.id
 
-        
+-- this needs to be pulled out into something like vertex_dim_fund_account_first_item_ids
+--    in order to avoid a circular reference since vertex_fact_credit_change references vertex_dim_fund_account
 -- first_item_ids:
-left join ( select fund_account_id, 
+/*left join ( select fund_account_id, 
         max(case when type_name = 'fundpool_match'
             then item_id end) as fundpool_match_first_item_id,
         max(case when type_name = 'kivapool_match'
@@ -67,6 +68,6 @@ left join ( select fund_account_id,
         
         where effective_time = min_eff_time
 
-        group by fund_account_id ) fid  on fid.fund_account_id = fa.id    
+        group by fund_account_id ) fid  on fid.fund_account_id = fa.id    */
 			
 where lfam.is_owner = 'yes' ;
