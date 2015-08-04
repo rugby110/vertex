@@ -1,0 +1,24 @@
+--VERTEX_NO_DEPLOY
+create or replace view vertex_dim_fund_account_first_item_ids as
+
+select fund_account_id, 
+        max(case when type_name = 'fundpool_match'
+            then item_id end) as fundpool_match_first_item_id,
+        max(case when type_name = 'kivapool_match'
+            then item_id end) as kivapool_match_first_item_id   
+   
+        from (
+     
+         select fund_account_id, dim_credit_change_type_id as type_id, cct.type_name, item_id, effective_time, min(effective_time) 
+         over (partition by fund_account_id, dim_credit_change_type_id) min_eff_time
+         from vertex_fact_credit_change cc
+         inner join verse.verse_dim_credit_change_type cct on cc.dim_credit_change_type_id = cct.v_id
+         where dim_credit_change_type_id in 
+                (select v_id
+                from verse.verse_dim_credit_change_type 
+                where type_name in ('fundpool_match','kivapool_match'))
+         ) min_times
+        
+        where effective_time = min_eff_time
+
+        group by fund_account_id;

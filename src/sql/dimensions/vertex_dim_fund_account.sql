@@ -45,29 +45,5 @@ left join (select fa.id as fund_account_id,
         inner join verse.verse_dim_loan l on l.loan_id=llp.loan_id and l.status in ('payingBack','raised','fundRaising')
         group by fa.id) port on port.fund_account_id = fa.id
 
--- this needs to be pulled out into something like vertex_dim_fund_account_first_item_ids
---    in order to avoid a circular reference since vertex_fact_credit_change references vertex_dim_fund_account
--- first_item_ids:
-/*left join ( select fund_account_id, 
-        max(case when type_name = 'fundpool_match'
-            then item_id end) as fundpool_match_first_item_id,
-        max(case when type_name = 'kivapool_match'
-            then item_id end) as kivapool_match_first_item_id   
-   
-        from (
-     
-         select fund_account_id, dim_credit_change_type_id as type_id, cct.type_name, item_id, effective_time, min(effective_time) 
-         over (partition by fund_account_id, dim_credit_change_type_id) min_eff_time
-         from vertex_fact_credit_change cc
-         inner join verse.verse_dim_credit_change_type cct on cc.dim_credit_change_type_id = cct.v_id
-         where dim_credit_change_type_id in 
-                (select v_id
-                from verse.verse_dim_credit_change_type 
-                where type_name in ('fundpool_match','kivapool_match'))
-         ) min_times
-        
-        where effective_time = min_eff_time
 
-        group by fund_account_id ) fid  on fid.fund_account_id = fa.id    */
-			
 where lfam.is_owner = 'yes' ;
