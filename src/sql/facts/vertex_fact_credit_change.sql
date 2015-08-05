@@ -21,18 +21,18 @@ select
         cc.fund_account_id,
 	CASE
                 WHEN cc.changer_id = 0 and cc.trans_id is not null and trans.changer_id is not null
-                        AND cc.create_time >= TO_NUMBER(TO_CHAR(TO_TIMESTAMP('20130101'), 'YYYYMMDD'))
+                        AND cc.create_time >= TO_CHAR(TO_TIMESTAMP('20130101'), 'YYYYMMDD')::INT
                         AND cc.type_id IN (select credit_change_type_id from credit_change_types_to_fix) 
                         THEN trans.changer_id 
                 WHEN cc.changer_id = 0 and ((cc.trans_id is null) or (trans.changer_id is null))
-                        AND cc.create_time >= TO_NUMBER(TO_CHAR(TO_TIMESTAMP('20130101'), 'YYYYMMDD'))
+                        AND cc.create_time >= TO_CHAR(TO_TIMESTAMP('20130101'), 'YYYYMMDD')::INT
                         AND cc.type_id IN (select credit_change_type_id from credit_change_types_to_fix)
                         THEN cc.fund_account_id
                 ELSE cc.changer_id
         END as changer_id,
         CASE
                 WHEN cc.changer_id = 0
-                        AND cc.create_time >= TO_NUMBER(TO_CHAR(TO_TIMESTAMP('20130101'), 'YYYYMMDD'))
+                        AND cc.create_time >= TO_CHAR(TO_TIMESTAMP('20130101'), 'YYYYMMDD')::INT
                         AND cc.type_id IN (select credit_change_type_id from credit_change_types_to_fix)
                         THEN 'user'
                 WHEN cc.changer_id = 0
@@ -43,9 +43,9 @@ select
         dcct.id as dim_credit_change_type_id,
 	cc.price,
 	cc.create_time,
-	TO_NUMBER(TO_CHAR(TO_TIMESTAMP(cc.create_time), 'YYYYMMDD')) as create_day_id,
+	TO_CHAR(TO_TIMESTAMP(cc.create_time), 'YYYYMMDD')::INT as create_day_id,
 	effective_time,
-	TO_NUMBER(TO_CHAR(TO_TIMESTAMP(cc.effective_time), 'YYYYMMDD')) as effective_day_id,
+	TO_CHAR(TO_TIMESTAMP(cc.effective_time), 'YYYYMMDD')::INT as effective_day_id,
 	cc.item_id,
 	cc.ref_id,
 	cc.new_balance,
