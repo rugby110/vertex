@@ -17,7 +17,7 @@ select
 	gl_name,
 	initiated_by,
 	NULL as fx_rate_from,
-		case when (ref_refers_to = 'credit_change' or gl_name = 'cc_loan_share_recapture') then true
+	case when (ref_refers_to = 'credit_change' or gl_name in ('cc_loan_share_recapture', 'cc_gift_cancellation')) then true
 	     else false
 	end as is_modification,
 	case when gl_name = 'cc_lender_check_sent' or gl_name = 'cc_zip_credit_transfer' then '<none>'
@@ -48,7 +48,7 @@ select
 	gl_name,
 	NULL as initiated_by,
 	fx_rate_from,
-	case when (ref_refers_to = 'credit_change' or gl_name = 'cc_loan_share_recapture') then true
+	case when (ref_refers_to = 'credit_change' or gl_name in ('cc_loan_share_recapture', 'cc_gift_cancellation')) then true
 	     else false
 	end as is_modification,
 	'<none>' as reporting_group
