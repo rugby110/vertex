@@ -47,10 +47,64 @@ select
 	-- invitations
 	inv.inviter_id as inviter_login_id,
 	inv.id as invitation_id
+	-- first_item_category
+        case
+            when 
+                fday.gift_redemption_first_day_id = fday.cc_all_first_day_id AND
+                (fday.promo_loan_credit_first_day_id <> fday.cc_all_first_day_id OR fday.promo_loan_credit_first_day_id IS NULL) AND
+                (fday.fundpool_match_first_day_id <> fday.cc_all_first_day_id OR fday.fundpool_match_first_day_id IS NULL) AND
+                (fday.kivapool_match_first_day_id <> fday.cc_all_first_day_id OR fday.kivapool_match_first_day_id  IS NULL)
+            then 'Kiva Card Redeemer'
+            when
+                fday.gift_redemption_first_day_id = fday.cc_all_first_day_id AND
+                fday.promo_loan_credit_first_day_id = fday.cc_all_first_day_id
+            then 'Kiva Card Partial Promo Redeemer'
+            when
+                fday.loan_purchase_first_day_id = fday.cc_all_first_day_id AND
+                (fday.promo_loan_credit_first_day_id = fday.cc_all_first_day_id OR 
+                        fday.fundpool_match_first_day_id = fday.cc_all_first_day_id OR 
+                        fday.kivapool_match_first_day_id = fday.cc_all_first_day_id) AND
+                (fday.deposit_first_day_id <> fday.cc_all_first_day_id OR fday.deposit_first_day_id IS NULL)
+            then 'Promo Lender'
+            when
+                fday.donation_first_day_id = fday.cc_all_first_day_id AND
+                (fday.loan_purchase_first_day_id <> fday.cc_all_first_day_id OR fday.loan_purchase_first_day_id IS NULL) AND
+                (gift_purchase_first_day_id <> fday.cc_all_first_day_id OR gift_purchase_first_day_id IS NULL)
+            then 'Donor'
+            when
+                fday.deposit_first_day_id = fday.cc_all_first_day_id AND
+                gift_purchase_first_day_id = fday.cc_all_first_day_id AND
+                (fday.donation_first_day_id <> fday.cc_all_first_day_id OR fday.donation_first_day_id IS NULL)
+            then 'Depositor - Kiva Card NonDonor'
+            when
+                fday.deposit_first_day_id = fday.cc_all_first_day_id AND
+                fday.gift_purchase_first_day_id = fday.cc_all_first_day_id AND
+                fday.donation_first_day_id = fday.cc_all_first_day_id
+            then 'Depositor - Kiva Card Donor'
+            when
+                fday.deposit_first_day_id = fday.cc_all_first_day_id AND
+                fday.donation_first_day_id = fday.cc_all_first_day_id AND
+                fday.loan_purchase_first_day_id = fday.cc_all_first_day_id
+            then 'Depositor - Lender Donor'
+            when
+                fday.deposit_first_day_id = fday.cc_all_first_day_id AND
+                fday.loan_purchase_first_day_id = fday.cc_all_first_day_id AND
+                (fday.donation_first_day_id <> fday.cc_all_first_day_id OR fday.donation_first_day_id IS NULL)
+            then 'Depositor - Lender NonDonor'
+            when
+                fday.deposit_first_day_id = fday.cc_all_first_day_id AND
+                (fday.loan_purchase_first_day_id <> fday.cc_all_first_day_id OR fday.loan_purchase_first_day_id IS NULL)
+            then 'Depositor - Other'
+            when
+                 fday.cc_all_first_day_id IS NULL OR fday.cc_all_first_day_id = 0
+            then 'Zombie'
+            else 'Other'
+        end AS first_item_category
 	
 from verse.verse_ods_kiva_login l
 inner join verse.verse_ods_kiva_login_fund_account_mapper lfam on l.id = lfam.login_id
 inner join verse.verse_ods_kiva_fund_account fa on lfam.fund_account_id = fa.id
+inner join vertex_dim_fund_account_first_day_ids fday
 left join verse.verse_ods_kiva_person person on  l.person_id = person.id
 left join verse.verse_ods_kiva_communication_settings com on com.login_id = l.id
 left join facebook_info face on face.user_id = l.id
