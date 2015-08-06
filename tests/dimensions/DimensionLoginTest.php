@@ -51,7 +51,7 @@ class DimensionLoginTest extends Kiva\Vertex\Testing\VertexTestCase {
 	public function testFacebookEntry() {
 		$result = $this->db->query("select facebook_connect_status as status
 			from $this->vertex_schema.vertex_dim_login
-			where login_id = 250");
+			where id = 250");
 		$count_from_vertex = $result->fetchColumn();
 
 		$result = $this->db->query("select status as status
@@ -60,6 +60,23 @@ class DimensionLoginTest extends Kiva\Vertex\Testing\VertexTestCase {
 		$count_from_ods = $result->fetchColumn();
 
 		$this->assertEquals($count_from_ods,$count_from_vertex);
+	}
+
+	public function testInviteeCount() {
+		$result = $this->db->query("select count(1) as how_many
+			from $this->vertex_schema.vertex_dim_login
+			where inviter_login_id is not null");
+		$count_from_vertex = $result->fetchColumn();
+
+		$result = $this->db->query("select count(1) as how_many
+			from $this->reference_schema.verse_ods_kiva_login l
+			inner join verse.verse_ods_kiva_invitation inv on inv.invitee_id = l.id
+			where inviter_id is not null
+			");
+		$count_from_ods = $result->fetchColumn();
+
+		$this->assertEquals($count_from_ods,$count_from_vertex);
+		$this->assertGreaterThan(700000, $count_from_vertex);
 	}
 }
 
