@@ -6,7 +6,7 @@
 
 export vertex_vertica_database=verticanow
 export vertex_vertica_reference_schema=verse
-export vertex_vertica_vertex_schema=vertex
+export vertex_vertica_vertex_schema=override_me
 export vertex_vertica_odbc_dsn=vertex_dev
 export vertex_vertica_host=localhost
 export vertex_vertica_port=5433
