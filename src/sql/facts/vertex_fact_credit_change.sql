@@ -55,7 +55,7 @@ from
         verse.verse_ods_kiva_credit_change cc
 left join verse.verse_ods_kiva_fund_account fa on fa.id = fund_account_id
 left join verse.verse_ods_kiva_transaction trans on trans.id = cc.trans_id
-left join vertex_dim_fund_account dfa on fa.id = dfa.fund_account_id
+left join vertex_dim_fund_account_accounts dfa on fa.id = dfa.fund_account_id
 inner join vertex_dim_credit_change_type dcct on dcct.id = 
 	case
 	       when cc.type_id=23 -- loan_purchase 
