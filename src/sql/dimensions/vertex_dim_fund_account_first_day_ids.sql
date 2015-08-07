@@ -51,8 +51,8 @@ select fund_account_id,
   max(misc_day_id) as misc_last_day_id,
   min(effective_day_id) as cc_all_first_day_id,
   max(effective_day_id) as cc_all_last_day_id,
-  NULL::INT as cc_user_first_day_id,
-  NULL::INT as cc_user_last_day_id,
+  min(cc_user_day_id) as cc_user_first_day_id,
+  max(cc_user_day_id) as cc_user_last_day_id,
   min(fundpool_repayment_day_id) as fundpool_repayment_first_day_id,
   max(fundpool_repayment_day_id) as fundpool_repayment_last_day_id,
   min(fundpool_match_day_id) as fundpool_match_first_day_id,
@@ -108,7 +108,10 @@ from (
 	case when type_name in ('kivapool_repayment') then effective_day_id end as kivapool_repayment_day_id,
 	case when type_name in ('kivapool_match') then effective_day_id end as kivapool_match_day_id,
 	case when type_name in ('promo_loan_credit') then effective_day_id end as promo_loan_credit_day_id,
-	case when type_name in ('promo_loan_reimbursement') then effective_day_id end as promo_loan_reimbursement_day_id	
+	case when type_name in ('promo_loan_reimbursement') then effective_day_id end as promo_loan_reimbursement_day_id,	
+	--cc_user_day_id pulls from loan_purchase, gift_purchase, gift_redemption, withdrawal, donation, deposit
+	case when type_name in ('loan_purchase', 'gift_purchase', 'gift_redemption','withdrawal_request', 'm_withdrawal', 'm_check_withdrawal','donation', 'check_donation', 'm_donation', 'subscription_donation', 'fundpool_donation','contract_recovery', 'dedication_donation', 'inactive_credit_donation',
+	               'deposit', 'check_deposit_9034', 'm_deposit', 'm_check_deposit', 'm_wire_transfer_deposit', 'echeck_deposit', 'fundpool_funding', 'kivapool_funding') then effective_day_id end as cc_user_day_id
 		
         from vertex_fact_credit_change cc
         inner join vertex_dim_credit_change_type cct on cc.dim_credit_change_type_id = cct.id
@@ -116,4 +119,5 @@ from (
      
      ) day_ids
         
+     
 group by day_ids.fund_account_id;
