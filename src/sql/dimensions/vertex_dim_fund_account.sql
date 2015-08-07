@@ -91,15 +91,18 @@ select faa.owner_login_id,
         fdd.promo_loan_reimbursement_last_day_id,
         fdd.uncategorized_first_day_id,
         fdd.uncateogorized_last_day_id,
-        fdd.loan_default_first_day_id,
-        fdd.loan_default_last_day_id,
-        fdd.withdrawal_sent_first_day_id,
-        fdd.withdrawal_sent_last_day_id,
-        fdd.promo_loan_default_first_day_id,
-        fdd.promo_loan_default_last_day_id
+        ldd.loan_default_first_day_id,
+        ldd.loan_default_last_day_id,
+        ldd.withdrawal_sent_first_day_id,
+        ldd.withdrawal_sent_last_day_id,
+        ldd.promo_loan_default_first_day_id,
+        ldd.promo_loan_default_last_day_id
+  
 
 from vertex_dim_fund_account_accounts faa
 
 left join vertex_dim_fund_account_first_item_ids fid on fid.fund_account_id = faa.fund_account_id
 
-left join vertex_dim_fund_account_first_day_ids fdd on fdd.fund_account_id = faa.fund_account_id;
+left join vertex_dim_fund_account_first_day_ids fdd on fdd.fund_account_id = faa.fund_account_id
+
+left join vertex_dim_fund_account_ledger_first_day_ids ldd on ldd.fund_account_id = faa.fund_account_id;
