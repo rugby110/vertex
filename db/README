@@ -1,0 +1,5 @@
+* cp db_config.sample.php db_config.php
+* edit db_config.php as needed
+
+To actually invoke MPM,
+* ./db/migrate.php help
