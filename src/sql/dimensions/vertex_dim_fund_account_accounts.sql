@@ -16,6 +16,7 @@ select lfam.login_id as owner_login_id,
 	fa.inactive_credit_recipient,
 	fa.billing_contact_id        as contact_info_id, -- for dimension column
 	fa.billing_contact_id, -- For intermediate column - just for easy debugging
+	fa.type_id as fund_account_type_id,
 	COALESCE(contact_info.country_id, 0) as country_id,
 	COALESCE(geo_state_codes.id, 0) as geo_state_codes_id,
 	port.current_portfolio_num,
