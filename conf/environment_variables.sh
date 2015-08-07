@@ -4,7 +4,7 @@
 # see https://confluence.kiva.org/display/BRAIN/Vertex+Developer+Setup for details on setting up a tunnel
 #  from a dev vm to Vertica
 
-export vertex_vertica_database=verse
+export vertex_vertica_database=verticanow
 export vertex_vertica_reference_schema=verse
 export vertex_vertica_vertex_schema=vertex
 export vertex_vertica_odbc_dsn=vertex_dev
