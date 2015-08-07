@@ -65,8 +65,8 @@ select fund_account_id,
   max(promo_loan_credit_day_id) as promo_loan_credit_last_day_id,
   min(promo_loan_reimbursement_day_id) as promo_loan_reimbursement_first_day_id,
   max(promo_loan_reimbursement_day_id) as promo_loan_reimbursement_last_day_id,
-  NULL::INT as uncategorized_first_day_id,
-  NULL::INT as uncateogorized_last_day_id
+  min(uncategorized_day_id) as uncategorized_first_day_id,
+  max(uncategorized_day_id) as uncateogorized_last_day_id
   
  
 from (        
@@ -105,8 +105,17 @@ from (
 	case when type_name in ('promo_loan_reimbursement') then effective_day_id end as promo_loan_reimbursement_day_id,	
 	--cc_user_day_id pulls from loan_purchase, gift_purchase, gift_redemption, withdrawal, donation, deposit
 	case when type_name in ('loan_purchase', 'gift_purchase', 'gift_redemption','withdrawal_request', 'm_withdrawal', 'm_check_withdrawal','donation', 'check_donation', 'm_donation', 'subscription_donation', 'fundpool_donation','contract_recovery', 'dedication_donation', 'inactive_credit_donation',
-	               'deposit', 'check_deposit_9034', 'm_deposit', 'm_check_deposit', 'm_wire_transfer_deposit', 'echeck_deposit', 'fundpool_funding', 'kivapool_funding') then effective_day_id end as cc_user_day_id
-		
+	               'deposit', 'check_deposit_9034', 'm_deposit', 'm_check_deposit', 'm_wire_transfer_deposit', 'echeck_deposit', 'fundpool_funding', 'kivapool_funding') then effective_day_id end as cc_user_day_id,
+	-- uncategorized not in any of above
+	case when type_name not in ('loan_purchase','m_loan_purchase_void','loan_share_recapture','loan_purchase_auto','loan_expired','loan_expired_modification','loan_refund','m_loan_refund_reversal',
+                'gift_purchase','gift_cancellation','gift_redemption','gift_expiration','gift_unexpiration','gift_expiration_donation','gift_expiration_donation_refund',
+                'withdrawal_request', 'm_withdrawal', 'm_check_withdrawal','withdrawal_modification', 'withdrawal_void', 'm_withdrawal_modification', 'withdrawal_returned', 'm_withdrawal_refund','donation', 'check_donation', 'm_donation', 'subscription_donation', 'fundpool_donation','contract_recovery', 'dedication_donation', 'inactive_credit_donation',
+                'donation_void', 'm_donation_void', 'subscription_donation_void', 'dedication_donation_void', 'check_donation_void', 'inactive_donation_void','autolend_donation', 'autolend_donation_void', 'loan_matcher_donation', 'loan_matcher_donation_void',
+                'loan_repayment','loan_repayment_currency_loss', 'loan_repayment_currency_credit','deposit', 'check_deposit_9034', 'm_deposit', 'm_check_deposit', 'm_wire_transfer_deposit', 'echeck_deposit', 'fundpool_funding', 'kivapool_funding',
+                'deposit_refund', 'm_check_deposit_void', 'm_check_deposit_currency_fix', 'deposit_modification', 'm_check_deposit_currency_gain',
+                'm_check_deposit_currency_loss', 'deposit_reversal', 'echeck_failed', 'fundpool_funding_void', 'kivapool_funding_void',
+                'm_credit', 'm_debit', 'm_credit_from_ops', 'm_credit_transfer', 'initial_balance','fundpool_repayment','fundpool_match','kivapool_repayment','kivapool_match','promo_loan_credit','promo_loan_reimbursement')	
+                then effective_day_id end as uncategorized_day_id
         from vertex_fact_credit_change cc
         inner join vertex_dim_credit_change_type cct on cc.dim_credit_change_type_id = cct.id
         where cct.source_table_name = 'credit_change' 
