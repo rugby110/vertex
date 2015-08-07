@@ -5,14 +5,14 @@
 #  from a dev vm to Vertica
 
 export vertex_vertica_database=verticanow
-export vertex_vertica_reference_schema=verse
-export vertex_vertica_vertex_schema=override_me
-export vertex_vertica_odbc_dsn=vertex_dev
 export vertex_vertica_host=localhost
 export vertex_vertica_port=5433
 export vertex_vertica_user=override_me
 export vertex_vertica_password=override_me
+export vertex_vertica_odbc_dsn=vertex_dev
+export vertex_vertica_reference_schema=verse
 # the target schema will be '<username>' for developers and 'vertex' for dev and production
+export vertex_vertica_vertex_schema=override_me
 export vertex_vertica_target_schema=override_me
 
 # get the directory where this script and the override script are
