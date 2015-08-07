@@ -35,13 +35,16 @@ left join verse.verse_ods_kiva_geo_state_codes geo_state_codes on geo_state_code
 
 -- portfolio aggregates:
 left join (select fa.id as fund_account_id,
-			count(distinct l.loan_id) as current_portfolio_num,
+			count(distinct l.id) as current_portfolio_num,
 			sum(llp.purchase_amt)          as current_portfolio_total,
-			sum((llp.purchase_amt/l.price_usd) * (l.price_usd-settled_total)) as e_current_portfolio_outstanding,
-			sum((llp.purchase_amt/l.price_usd) * (settled_total))             as e_current_portfolio_repaid
+			sum((llp.purchase_amt/l.price) * (l.price-rs.settled_total)) as e_current_portfolio_outstanding,
+			sum((llp.purchase_amt/l.price) * (rs.settled_total))             as e_current_portfolio_repaid
         from verse.verse_ods_kiva_fund_account fa
         inner join verse.verse_ods_kiva_lender_loan_purchase llp on llp.lender_fund_account_id=fa.id
-        inner join verse.verse_dim_loan l on l.loan_id=llp.loan_id and l.status in ('payingBack','raised','fundRaising')
+        inner join verse.verse_ods_kiva_loan l on l.id=llp.loan_id and l.status in ('payingBack','raised','fundRaising')
+        left join (select loan_id, sum(settled_price) as settled_total
+                        from verse.verse_ods_kiva_repayment_settled
+                        group by loan_id) rs on rs.loan_id = l.id
         group by fa.id) port on port.fund_account_id = fa.id
 
 
