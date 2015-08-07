@@ -21,11 +21,13 @@ class VertexTestCase extends \PHPUnit_Framework_TestCase{
 		$this->user = getenv("vertex_vertica_user");
 		$this->pwd = getenv("vertex_vertica_password");
 		$this->odbc_dsn = getenv("vertex_vertica_odbc_dsn");
+		$this->assertPreconditions();
 
 		try {
 			$this->db = new \PDO("odbc:" . $this->odbc_dsn, $this->user, $this->pwd);
 		} catch (PDOException $e) {
 			echo $e->getMessage() . "\n";
+			throw $e;
 		}
 
 	}
