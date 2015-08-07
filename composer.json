@@ -9,7 +9,16 @@
       "email": "email@example.com"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/kiva/mysql-php-migrations"
+    }
+  ],
   "require": {
+    "davesloan/mysql-php-migrations": "dev-feature-vertex-migrations@dev"
+  },
+  "require-dev": {
     "phpunit/phpunit": "4.*"
   },
   "autoload": {
