@@ -1,13 +1,6 @@
 create or replace view vertex_dim_fund_account_first_day_ids as
 
 select fund_account_id, 
-  NULL::INT as create_time,
-  NULL::INT create_day_id,
-  NULL as inactive_credit_recipient,
-  NULL as donate_on_repayment,
-  NULL::INT country_id,
-  NULL::INT contact_info_id,
-  NULL::INT geo_state_codes_id,
   min(loan_purchase_day_id) as loan_purchase_first_day_id,
   max(loan_purchase_day_id) as loan_purchase_last_day_id,
   min(loan_purchase_modification_day_id) as loan_purchase_modification_first_day_id,
