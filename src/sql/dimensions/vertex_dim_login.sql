@@ -46,7 +46,7 @@ select
 	face.facebook_connect_time,
 	-- invitations
 	inv.inviter_id as inviter_login_id,
-	inv.id as invitation_id
+	inv.id as invitation_id,
 	-- first_item_category
         case
             when 
@@ -104,7 +104,7 @@ select
 from verse.verse_ods_kiva_login l
 inner join verse.verse_ods_kiva_login_fund_account_mapper lfam on l.id = lfam.login_id
 inner join verse.verse_ods_kiva_fund_account fa on lfam.fund_account_id = fa.id
-inner join vertex_dim_fund_account_first_day_ids fday
+left join vertex_dim_fund_account_first_day_ids fday on fday.fund_account_id = fa.id
 left join verse.verse_ods_kiva_person person on  l.person_id = person.id
 left join verse.verse_ods_kiva_communication_settings com on com.login_id = l.id
 left join facebook_info face on face.user_id = l.id
@@ -112,7 +112,6 @@ left join verse.verse_ods_kiva_invitation inv on inv.invitee_id = l.id
 where lfam.is_default_account = 'yes'
 	and fa.type_id = 1 -- LENDER_FUND_ACCOUNT_TYPE_ID
 	
-
 
 
 
