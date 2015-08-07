@@ -12,7 +12,7 @@ export vertex_vertica_host=localhost
 export vertex_vertica_port=3322
 export vertex_vertica_user=override_me
 export vertex_vertica_password=override_me
-# the target schema will be '<username>_sandbox' for developers and 'vertex' for dev and production
+# the target schema will be '<username>' for developers and 'vertex' for dev and production
 export vertex_vertica_target_schema=override_me
 
 # get the directory where this script and the override script are
