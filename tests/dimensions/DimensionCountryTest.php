@@ -1,6 +1,6 @@
 <?php
 
-class DimensionDatetimeDayTest extends Kiva\Vertex\Testing\VertexTestCase {
+class DimensionCountryTest extends Kiva\Vertex\Testing\VertexTestCase {
 	public function setUp() {
 		parent::setUp();
 	}
