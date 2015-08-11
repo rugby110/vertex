@@ -16,6 +16,8 @@ class VertexTestCase extends \PHPUnit_Framework_TestCase{
 	protected $odbc_dsn;
 
 	public function setUp() {
+		parent::setUp();
+
 		$this->reference_schema = getenv("vertex_vertica_reference_schema");
 		$this->vertex_schema = getenv("vertex_vertica_vertex_schema");
 		$this->user = getenv("vertex_vertica_user");
@@ -31,6 +33,8 @@ class VertexTestCase extends \PHPUnit_Framework_TestCase{
 	}
 
 	public function tearDown() {
+		parent::tearDown();
+
 		$this->db = null;
 	}
 
