@@ -37,6 +37,10 @@ run_ddl () {
 	done
 }
 
+run_permissions () {
+	php ./bin/view_permission_updater.php
+}
+
 run_tests () {
 	./vendor/bin/phpunit tests
 }

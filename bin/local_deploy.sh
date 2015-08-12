@@ -24,4 +24,7 @@ run_mpm_migrations
 # Apply all the Views from src/sql
 run_ddl
 
+# Update permissions for views
+run_permissions
+
 exit 0
