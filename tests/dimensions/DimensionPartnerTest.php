@@ -1,6 +1,6 @@
 <?php
 
-class DimensionParnterTest extends Kiva\Vertex\Testing\VertexTestCase {
+class DimensionPartnerTest extends Kiva\Vertex\Testing\VertexTestCase {
 	public function setUp() {
 		parent::setUp();
 	}
@@ -19,7 +19,7 @@ class DimensionParnterTest extends Kiva\Vertex\Testing\VertexTestCase {
 		$this->assertEquals($count_from_kiva_ods,$count_from_vertex);
 	}
 
-	public function testRandomSample() {
+	/*public function testRandomSample() {
 
 		$random_ids = $this->_setupHelper();
 		echo $random_ids;
@@ -39,7 +39,7 @@ class DimensionParnterTest extends Kiva\Vertex\Testing\VertexTestCase {
 
 		$this->assertSame($from_dim,$from_vertex);
 
-	}
+	}*/
 
 	private function _setupHelper() {
 
