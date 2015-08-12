@@ -1,6 +1,6 @@
 <?php
 
-class DimensionFundAccountTest extends Kiva\Vertex\Testing\VertexTestCase
+class DimensionFundAccountFirstItemIdsTest extends Kiva\Vertex\Testing\VertexTestCase
 {
 	public function setUp()
 	{
