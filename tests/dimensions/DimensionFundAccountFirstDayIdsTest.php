@@ -57,10 +57,10 @@ class DimensionFundAccountTest extends Kiva\Vertex\Testing\VertexTestCase
             , RANDOM() AS RandomNumber
      		FROM $this->reference_schema.verse_dim_fund_account
      		WHERE RANDOMINT((SELECT COUNT(*) FROM $this->reference_schema.verse_dim_fund_account ))%100 = 42
-     		and (fundpool_match_first_item_id is not null or kivapool_match_first_item_id is not null)
+     		--and loan_purchase_first_day_id is not null
      		) AS T1
 			ORDER BY RandomNumber
-			LIMIT 10");
+			LIMIT 5");
 		$random_ids = $random_result->fetchAll();
 
 		for ($i = 0, $len = count($random_ids); $i < $len; $i++) {
