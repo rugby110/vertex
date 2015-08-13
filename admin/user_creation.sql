@@ -5,7 +5,7 @@
 --create user verse identified by 'pwd';
 --create user sam identified by 'pwd';
 --create user looker identified by 'pwd';
-
+--create user bamboo identified by 'pwd';
 
 grant authentication host_pass to mike;
 grant authentication local_pass to mike;
@@ -21,6 +21,8 @@ grant authentication host_pass to sam;
 grant authentication local_pass to sam;
 grant authentication host_pass to looker;
 grant authentication local_pass to looker;
+grant authentication host_pass to bamboo;
+grant authentication local_pass to bamboo;
 
 alter user looker search_path "$user", vertex, public
 
