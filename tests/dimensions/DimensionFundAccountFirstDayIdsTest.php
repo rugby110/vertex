@@ -28,7 +28,7 @@ class DimensionFundAccountFirstDayIdsTest extends Kiva\Vertex\Testing\VertexTest
 	}
 
 
-	public function testDayIds() {
+	/*public function testRandomSample() {
 
 		$random_ids = $this->_setupHelper();
 
@@ -47,7 +47,7 @@ class DimensionFundAccountFirstDayIdsTest extends Kiva\Vertex\Testing\VertexTest
 
 		$this->assertSame($from_ods,$from_vertex);
 
-	}
+	}*/
 
 	private function _setupHelper() {
 
