@@ -18,7 +18,6 @@ select TO_CHAR(ma.fund_account_id) || TO_CHAR('_') || COALESCE(TO_CHAR(pf.id), '
 			pg.display_name as promo_group_display_name,
 			pf.promo_price as promo_price,
 			pf.redemption_max as promo_redemption_max,
-			pf.redeemed_amount as promo_redeemed_amt,
 			pg.id as promo_group_id,
 			pg.type as promo_group_type,
 			pg.team_id as team_id
