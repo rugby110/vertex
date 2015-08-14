@@ -27,7 +27,9 @@ select
 	l.person_id,
 	l.default_team_id,
 	l.create_time as registration_time,
+	TO_CHAR(TO_TIMESTAMP(l.create_time), 'YYYYMMDD')::INT as registration_day_id,
 	l.last_login_time,
+	TO_CHAR(TO_TIMESTAMP(l.last_login_time), 'YYYYMMDD')::INT as last_login_day_id,
 	-- communications settings
 	com.medium, 
 	com.sendKivaNews, 

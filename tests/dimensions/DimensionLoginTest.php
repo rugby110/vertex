@@ -78,6 +78,25 @@ class DimensionLoginTest extends Kiva\Vertex\Testing\VertexTestCase {
 		$this->assertEquals($count_from_ods,$count_from_vertex);
 		$this->assertGreaterThan(700000, $count_from_vertex);
 	}
+
+	public function testKivaCardRedeemerCount() {
+		$result = $this->db->query("select count(*) as how_many
+			from $this->vertex_schema.vertex_dim_login
+			where
+			first_item_category = 'Kiva Card Redeemer' and
+			registration_day_id <= 20150101");
+		$count_from_vertex = $result->fetchColumn();
+
+		$result = $this->db->query("select count(*) as how_many
+			from $this->reference_schema.verse_dim_login
+			where
+			first_item_category = 'Kiva Card Redeemer' and
+			registration_day_id <= 20150101");
+		$count_from_verse = $result->fetchColumn();
+
+		// the verse seems to be missing some data, so make sure we have as many or more rows
+		$this->assertGreaterThanOrEqual($count_from_verse, $count_from_vertex);
+	}
 }
 
 
