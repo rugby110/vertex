@@ -20,7 +20,7 @@ select TO_CHAR(ma.fund_account_id) || TO_CHAR('_') || COALESCE(TO_CHAR(pf.id), '
 			pf.redemption_max as promo_redemption_max,
 			pg.id as promo_group_id,
 			pg.type as promo_group_type,
-			pg.team_id as team_id
+			COALESCE(pg.team_id, 0) as team_id
 			
 from verse.verse_ods_kiva_managed_account ma
 inner join verse.verse_ods_kiva_contract_entity ce on ma.contract_entity_id = ce.id
