@@ -66,7 +66,7 @@ select fund_account_id,
   min(promo_loan_reimbursement_day_id) as promo_loan_reimbursement_first_day_id,
   max(promo_loan_reimbursement_day_id) as promo_loan_reimbursement_last_day_id,
   min(uncategorized_day_id) as uncategorized_first_day_id,
-  max(uncategorized_day_id) as uncateogorized_last_day_id
+  max(uncategorized_day_id) as uncategorized_last_day_id
   
  
 from (        

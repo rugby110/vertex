@@ -47,6 +47,18 @@ class VertexTestCase extends \PHPUnit_Framework_TestCase{
 		$this->assertGreaterThan(0, strlen($this->odbc_dsn),"Missing Vertex environment variable vertex_vertica_odbc_dsn. See vertex/conf/environment_variables.sh");
 
 	}
+
+	/**
+	 * Asserts that two numbers are within the given margin.
+	 *
+	 * @param  $a - a number
+	 * @param  $b - another number
+	 * @param  $margin - the margin $a and $b should be within
+	 * @param string $message - error message passed to assertTrue
+	 */
+	public function assertWithinMargin($a, $b, $margin, $message = '') {
+		$this->assertTrue(abs($a - $b) < $margin, $message);
+	}
 }
 
 
