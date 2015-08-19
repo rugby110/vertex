@@ -22,7 +22,7 @@ class DimensionDatetimeDayTest extends Kiva\Vertex\Testing\VertexTestCase {
 		$row= $result->fetch(PDO::FETCH_ASSOC);
 
 		$this->assertEquals(20050403,$row['id']);
-		$this->assertEquals(1112486400,$row['full_time']);
+		$this->assertEquals(mktime(0,0,0,4,3,2005),$row['full_time']);
 		$this->assertEquals(2005,$row['year']);
 		$this->assertEquals(2,$row['quarter']);
 		$this->assertEquals(4,$row['month']);
