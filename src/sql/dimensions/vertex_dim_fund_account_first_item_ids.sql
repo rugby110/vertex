@@ -6,11 +6,11 @@ select fund_account_id,
   min(case when type_name = 'kivapool_match' and effective_time = min_eff_time
     then item_id end) as kivapool_match_first_item_id   
    
-  from ( select fund_account_id, dim_credit_change_type_id as type_id, cct.type_name, item_id, effective_time, min(effective_time) 
-         over (partition by fund_account_id, dim_credit_change_type_id) min_eff_time
+  from ( select fund_account_id, credit_change_type_id as type_id, cct.type_name, item_id, effective_time, min(effective_time)
+         over (partition by fund_account_id, credit_change_type_id) min_eff_time
          from vertex_fact_credit_change cc
-         inner join vertex_dim_credit_change_type cct on cc.dim_credit_change_type_id = cct.id
-         where dim_credit_change_type_id in 
+         inner join vertex_dim_credit_change_type cct on cc.credit_change_type_id = cct.id
+         where credit_change_type_id in
                 (select id
                 from vertex_dim_credit_change_type 
                 where type_name in ('fundpool_match','kivapool_match'))

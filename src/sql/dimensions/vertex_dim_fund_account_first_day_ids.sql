@@ -117,7 +117,7 @@ from (
                 'm_credit', 'm_debit', 'm_credit_from_ops', 'm_credit_transfer', 'initial_balance','fundpool_repayment','fundpool_match','kivapool_repayment','kivapool_match','promo_loan_credit','promo_loan_reimbursement')	
                 then effective_day_id end as uncategorized_day_id
         from vertex_fact_credit_change cc
-        inner join vertex_dim_credit_change_type cct on cc.dim_credit_change_type_id = cct.id
+        inner join vertex_dim_credit_change_type cct on cc.credit_change_type_id = cct.id
         where cct.source_table_name = 'credit_change' 
      
      ) day_ids
