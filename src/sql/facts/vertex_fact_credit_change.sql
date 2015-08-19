@@ -40,7 +40,7 @@ select
 	       WHEN cc.changer_id=cc.fund_account_id THEN 'user'
 	       ELSE 'admin'
 	END as changer_type,
-        dcct.id as dim_credit_change_type_id,
+        dcct.id as credit_change_type_id,
 	cc.price,
 	cc.create_time,
 	TO_CHAR(TO_TIMESTAMP(cc.create_time), 'YYYYMMDD')::INT as create_day_id,
