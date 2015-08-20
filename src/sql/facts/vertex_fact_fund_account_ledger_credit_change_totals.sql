@@ -1,12 +1,12 @@
 create or replace view vertex_fact_fund_account_ledger_credit_change_totals as
 
 select fund_account_id, 
-  max(loan_default_num) as loan_default_num,
-  max(loan_default_total) as loan_default_total,
-  max(withdrawal_sent_num) as withdrawal_sent_num,
-  max(withdrawal_sent_total) as withdrawal_sent_total,
-  max(promo_loan_default_num) as promo_loan_default_num,
-  max(promo_loan_default_total) as promo_loan_default_total
+  sum(loan_default_num) as loan_default_num,
+  sum(loan_default_total) as loan_default_total,
+  sum(withdrawal_sent_num) as withdrawal_sent_num,
+  sum(withdrawal_sent_total) as withdrawal_sent_total,
+  sum(promo_loan_default_num) as promo_loan_default_num,
+  sum(promo_loan_default_total) as promo_loan_default_total
   
 from (        
         select fund_account_id, 
