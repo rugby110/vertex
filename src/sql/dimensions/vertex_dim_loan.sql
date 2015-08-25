@@ -86,6 +86,7 @@ select l.id as loan_id,
 	TO_CHAR(TO_TIMESTAMP(shares.shares_purchased_last_time), 'YYYYMMDD')::INT as shares_purchased_last_day_id,
 	re.num_repayment_expected,
 	TO_CHAR(TO_TIMESTAMP(re.final_repayment_expected_time), 'YYYYMMDD')::INT as final_repayment_expected_day_id,
+	TO_CHAR(re.default_limit_timestamp, 'YYYYMMDD')::INT as default_limit_day_id,
 	rs.settled_num,
         rs.settled_total,
         TO_CHAR(TO_TIMESTAMP(rs.settled_first_time), 'YYYYMMDD')::INT as settled_first_day_id,
@@ -158,9 +159,8 @@ left join (select loan_id,
 -- RepaymentExpected
 left join (select loan_id,
                   count(1) as num_repayment_expected,
-		  max(effective_time) as final_repayment_expected_time
-		  --unix_timestamp(DATE_ADD(from_unixtime(max(effective_time)), INTERVAL 6 MONTH)) as default_limit_time
-		  --ADD_MONTHS(max(effective_time), 6)
+		  max(effective_time) as final_repayment_expected_time,
+		  ADD_MONTHS(TO_TIMESTAMP(max(effective_time)), 6) as default_limit_timestamp
            from verse.verse_ods_kiva_repayment_expected
 	   group by loan_id) re on re.loan_id = l.id  
 		  
