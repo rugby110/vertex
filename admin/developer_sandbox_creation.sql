@@ -39,3 +39,5 @@ alter user van default role vertex_read_only_view_role;
 alter user nikkiw default role vertex_read_only_view_role;
 alter user sam default role vertex_read_only_view_role;
 alter user looker default role vertex_read_only_view_role;
+
+GRANT EXECUTE ON TRANSFORM FUNCTION group_concat(Varchar) to vertex_read_only_view_role;
