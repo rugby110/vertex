@@ -1,0 +1,4 @@
+---
+conf:
+  vertex_vertica_database: "verticanow"
+  vertex_vertica_reference_schema: "verse"

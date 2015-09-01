@@ -1,0 +1,7 @@
+---
+:backends:
+  - yaml
+:yaml:
+  :datadir: conf/hieradata
+:hierarchy:
+  - global
