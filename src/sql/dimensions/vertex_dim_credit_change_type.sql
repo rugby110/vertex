@@ -1,6 +1,6 @@
 create or replace view vertex_dim_credit_change_type as
 select	
-        cct.id,
+        cct.id as credit_change_type_id,
 	type_name,
 	requires_tran='yes' as requires_tran,
 	item_refers_to,

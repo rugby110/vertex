@@ -51,7 +51,7 @@ class DimensionLoginTest extends Kiva\Vertex\Testing\VertexTestCase {
 	public function testFacebookEntry() {
 		$result = $this->db->query("select facebook_connect_status as status
 			from $this->vertex_schema.vertex_dim_login
-			where id = 250");
+			where login_id = 250");
 		$count_from_vertex = $result->fetchColumn();
 
 		$result = $this->db->query("select status as status

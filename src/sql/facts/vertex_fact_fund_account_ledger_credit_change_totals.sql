@@ -18,7 +18,7 @@ from (
         case when type_name in ('promo_loan_default', 'promo_loan_undefault') then COALESCE(sum(lcc.price),0) end as promo_loan_default_total
        
         from verse.verse_ods_kiva_ledger_credit_change lcc
-        inner join vertex_dim_credit_change_type cct on lcc.type_id = cct.id
+        inner join vertex_dim_credit_change_type cct on lcc.type_id = cct.credit_change_type_id
         where cct.source_table_name = 'ledger_credit_change'
         and fund_account_id is not null 
         

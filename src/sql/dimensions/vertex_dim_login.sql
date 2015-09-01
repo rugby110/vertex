@@ -10,7 +10,7 @@ group by
         user_id,status,create_time
 )
 select
-	l.id,
+	l.id as login_id,
 	lfam.fund_account_id as default_fund_account_id,
 	l.username,
 	l.permanent_name,

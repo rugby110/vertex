@@ -161,7 +161,7 @@ from (  select fund_account_id,
                 then COALESCE(sum(cc.price),0) end as uncategorized_total
                 
         from vertex_fact_credit_change cc
-        inner join vertex_dim_credit_change_type cct on cc.credit_change_type_id = cct.id
+        inner join vertex_dim_credit_change_type cct on cc.credit_change_type_id = cct.credit_change_type_id
         where cct.source_table_name = 'credit_change' 
         
         group by fund_account_id, type_name
