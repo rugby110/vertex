@@ -13,9 +13,12 @@ grant all on schema looker to looker with grant option;
 create schema IF NOT EXISTS bamboo AUTHORIZATION bamboo;
 grant all on schema bamboo to bamboo with grant option;
 
+create schema IF NOT EXISTS dthomas AUTHORIZATION dthomas;
+grant all on schema dthomas to dthomas with grant option;
+
 -- grant verse schema access 
-grant usage on schema verse to vertex, van, nikkiw, sam, looker, bamboo;
-grant select on all tables in schema verse to van, nikkiw, sam, looker, bamboo;
+grant usage on schema verse to vertex, van, nikkiw, sam, looker, bamboo, dthomas;
+grant select on all tables in schema verse to van, nikkiw, sam, looker, bamboo, dthomas;
 
 -- this is a key requirement, the vertex user needs to be granted
 --   select ... WITH GRANT OPTION for the tables in the verse in order to grant
@@ -23,8 +26,8 @@ grant select on all tables in schema verse to van, nikkiw, sam, looker, bamboo;
 grant select on all tables in schema verse to vertex with grant option;
 
 -- grant vertex schema access
-grant usage on schema vertex to van, nikkiw, sam, looker;
-grant select on all tables in schema vertex to van, nikkiw, sam, looker;
+grant usage on schema vertex to van, nikkiw, sam, looker, bamboo, dthomas;
+grant select on all tables in schema vertex to van, nikkiw, sam, looker, bamboo, dthomas;
 
 -- select rights need to be granted to each view as in the line below 
 -- grant select on vertex.vertex_dim_credit_change_type to vertex_read_only_view_role;
@@ -33,7 +36,7 @@ grant select on all tables in schema vertex to van, nikkiw, sam, looker;
 
 -- creation of the role will fail after it has been run once, but no harm is done
 create role vertex_read_only_view_role; 
-grant vertex_read_only_view_role to van, nikkiw, sam, looker;
+grant vertex_read_only_view_role to van, nikkiw, sam, looker, bamboo, dthomas;
 
 alter user van default role vertex_read_only_view_role;
 alter user nikkiw default role vertex_read_only_view_role;
