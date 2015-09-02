@@ -16,5 +16,5 @@ function run_test () {
   echo "running permissions"
   run_permissions
   echo "running phpunit <bamboo_job_name> # where bamboo_job_name is $job_name"
-  ./vendor/bin/phpunit "$job_name"
+  ./vendor/bin/phpunit --log-junit "test-reports/${job_name}.xml" "$job_name"
 }
