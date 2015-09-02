@@ -9,14 +9,14 @@ function parse_build_plan_name () {
  
   # bamboo can only pass the project name as a string with:
   # "<project> - <plan> - <branch> - <job>"
-  project_name=$(cut -d "-" -f 1 <<<"$build_plan_name")
-  plan_name=$(cut -d "-" -f 2 <<<"$build_plan_name")
-  branch_name=$(cut -d "-" -f 3 <<<"$build_plan_name")
-  job_name=$(cut -d "-" -f 4 <<<"$build_plan_name")
+  project_name=$(echo $(cut -d "-" -f 1 <<<"$build_plan_name"))
+  plan_name=$(echo $(cut -d "-" -f 2 <<<"$build_plan_name"))
+  branch_name=$(echo $(cut -d "-" -f 3 <<<"$build_plan_name"))
+  job_name=$(echo $(cut -d "-" -f 4 <<<"$build_plan_name"))
 
   # if the branch is missing, then the format is
   # "<project> - <plan> - <job>"
-  if [[ -n "$job_name" ]]; then
+  if [[ -z "$job_name" ]]; then
     job_name="$branch_name"
     branch_name=""
   fi
