@@ -6,6 +6,12 @@ function run_test () {
     esac
   done
   source conf/environment_variables.sh
+  echo "running mpm_migrations"
+  run_mpm_migrations
+  echo "running ddl"
+  run_ddl
+  echo "running permissions"
+  run_permissions
   echo "running phpunit <bamboo_job_name> # where bamboo_job_name is $job_name"
   ./vendor/bin/phpunit "$job_name"
 }
