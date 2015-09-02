@@ -1,4 +1,3 @@
--- VERTEX_NO_DEPLOY
 create or replace view vertex_fact_promo_impact_marginal_amounts as
 
    with deposit_credit_change_types as (
