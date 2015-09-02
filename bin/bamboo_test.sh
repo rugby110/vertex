@@ -15,6 +15,7 @@ EOF
 # defaults
 build_plan_name="testproject - testplan - testbranch - testjob"
 bamboo_stage="TEST STAGE: init"
+deployment_environment="test"
 # cli argument processing
 while getopts "p:" opt; do
   case ${opt} in
@@ -53,5 +54,6 @@ echo "  https://confluence.kiva.org/display/TO/Deployment+Stages"
 echo
 bamboo_stage="TEST STAGE: run test"
 echo $bamboo_stage
+generate_environment_config -e "$deployment_environment"
 run_test -j "$job_name"
 

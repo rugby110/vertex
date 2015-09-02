@@ -1,0 +1,3 @@
+---
+conf:
+  vertex_vertica_port: "5433"

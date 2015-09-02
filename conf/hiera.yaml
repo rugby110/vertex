@@ -1,0 +1,9 @@
+---
+:backends:
+  - yaml
+:yaml:
+  :datadir: conf/hieradata
+:hierarchy:
+  - env/%{deploy_env}
+  - env/common
+  - global

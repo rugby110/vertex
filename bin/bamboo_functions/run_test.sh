@@ -6,5 +6,6 @@ function run_test () {
     esac
   done
   source conf/environmment_variables.sh
+  echo "running phpunit <bamboo_job_name> # where bamboo_job_name is $job_name"
   ./vendor/bin/phpunit "$job_name"
 }
