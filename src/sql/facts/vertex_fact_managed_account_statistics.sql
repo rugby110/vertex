@@ -113,13 +113,13 @@ default_ledger_credit_change_types as (
                 ELSE 0
             END AS ops_credit_amount,            
             CASE
-                WHEN (fact_cc.credit_change_type_id IN (65, -- fundpool_repayment
-                                                            70) -- kivapool_repayment
+                WHEN (fact_cc.credit_change_type_id IN (72, -- fundpool_repayment
+                                                            77) -- kivapool_repayment
                         AND fact_cc.ref_id > 2000000
                      )
                      OR
-                     (fact_cc.credit_change_type_id IN (26, -- loan_repayment
-                                                            52) -- promo_loan_reimbursement
+                     (fact_cc.credit_change_type_id IN (25, -- loan_repayment
+                                                            57) -- promo_loan_reimbursement
                      )
                 THEN price
                 ELSE 0
@@ -131,8 +131,8 @@ default_ledger_credit_change_types as (
             END AS fx_loss_amount,
             0 as default_amount,  -- this comes from ledger_credit_change
             CASE
-                WHEN (fact_cc.credit_change_type_id IN (65, -- fundpool_repayment
-                                                           70) -- kivapool_repayment
+                WHEN (fact_cc.credit_change_type_id IN (72, -- fundpool_repayment
+                                                           77) -- kivapool_repayment
                         AND fact_cc.ref_id < 2000000
                         AND price > 0
                       )
@@ -159,18 +159,18 @@ default_ledger_credit_change_types as (
         INNER JOIN vertex_dim_managed_account ma ON fact_cc.fund_account_id = ma.fund_account_id
         INNER JOIN vertex_dim_credit_change_type dimcct ON dimcct.credit_change_type_id = fact_cc.credit_change_type_id
         INNER JOIN vertex_dim_fund_account fa ON fa.fund_account_id = ma.fund_account_id
-        LEFT JOIN verse.verse_ods_kiva_repayment_settled rs ON rs.id = ref_id
+        LEFT JOIN repayment_settled rs ON rs.id = ref_id
         LEFT JOIN vertex_dim_loan loan ON
             CASE
-                WHEN fact_cc.credit_change_type_id IN (64, -- fundpool_match
-                                                           69) -- kivapool_match
+                WHEN fact_cc.credit_change_type_id IN (71, -- fundpool_match
+                                                           76) -- kivapool_match
                 THEN ref_id
-                WHEN fact_cc.credit_change_type_id in (27,  -- loan_repayment_currency_loss
-                                                           65, -- fundpool_repayment
-                                                           70) -- kivapool_repayment
+                WHEN fact_cc.credit_change_type_id in (26,  -- loan_repayment_currency_loss
+                                                           72, -- fundpool_repayment
+                                                           77) -- kivapool_repayment
                         AND fact_cc.ref_id < 2000000
                 THEN ref_id
-                WHEN fact_cc.credit_change_type_id = 65 -- fundpool_repayment
+                WHEN fact_cc.credit_change_type_id = 72 -- fundpool_repayment
                         AND fact_cc.ref_id > 2000000
                 THEN rs.loan_id                
                 WHEN dimcct.item_refers_to = 'business'
@@ -179,7 +179,7 @@ default_ledger_credit_change_types as (
                 THEN ref_id
                 ELSE NULL
             END = loan.loan_id
-        LEFT JOIN verse.verse_ods_kiva_town town ON loan.geo_id = town.id
+        LEFT JOIN town town ON loan.geo_id = town.id
         WHERE
             fact_cc.fund_account_id > 0
 
@@ -224,7 +224,7 @@ default_ledger_credit_change_types as (
         INNER JOIN vertex_dim_credit_change_type dimcct ON dimcct.credit_change_type_id = fact_cc.credit_change_type_id
         INNER JOIN vertex_dim_fund_account fa ON fa.fund_account_id = ma.fund_account_id        
         INNER JOIN vertex_dim_loan loan ON loan.loan_id = fact_cc.ref_id
-        INNER JOIN verse.verse_ods_kiva_town town ON loan.geo_id = town.id
+        INNER JOIN town town ON loan.geo_id = town.id
         WHERE
             fact_cc.fund_account_id > 0;
 
