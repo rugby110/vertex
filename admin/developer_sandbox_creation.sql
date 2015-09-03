@@ -38,9 +38,14 @@ grant select on all tables in schema vertex to van, nikkiw, sam, looker, bamboo,
 create role vertex_read_only_view_role; 
 grant vertex_read_only_view_role to van, nikkiw, sam, looker, bamboo, dthomas;
 
+-- grant vertex schema access
+grant usage on schema ods_kiva to vertex_read_only_view_role;
+grant select on all tables in schema ods_kiva to vertex_read_only_view_role;
+
 alter user van default role vertex_read_only_view_role;
 alter user nikkiw default role vertex_read_only_view_role;
 alter user sam default role vertex_read_only_view_role;
 alter user looker default role vertex_read_only_view_role;
+alter user bamboo default role vertex_read_only_view_role;
 
 GRANT EXECUTE ON TRANSFORM FUNCTION group_concat(Varchar) to vertex_read_only_view_role;

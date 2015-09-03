@@ -27,5 +27,9 @@ grant authentication local_pass to bamboo;
 grant authentication host_pass to dthomas;
 grant authentication local_pass to dthomas;
 
-alter user looker search_path "$user", vertex, public
-
+alter user mike search_path "$user", ods_kiva, public;
+alter user van search_path "$user", ods_kiva, public;
+alter user nikkiw search_path "$user", ods_kiva, public;
+alter user looker search_path "$user", vertex, ods_kiva, public;
+alter user bamboo search_path "$user", ods_kiva, public;
+alter user dthomas search_path "$user", ods_kiva, public;
