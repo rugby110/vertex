@@ -8,9 +8,10 @@ function run_ddl () {
       echo "Skipping '$sql_file' with VERTEX_NO_DEPLOY tag"
     else
       echo "Deploying file '$sql_file'"
-      echo "set search_path to $vertex_vertica_vertex_schema;SET SESSION AUTOCOMMIT TO on;"|cat - $sql_file > /tmp/out.sql
+      #echo "set search_path to $vertex_vertica_vertex_schema;SET SESSION AUTOCOMMIT TO on;"|cat - $sql_file > /tmp/out.sql
       #cat /tmp/out.sql
-      vsql -f /tmp/out.sql
+      #vsql -f /tmp/out.sql
+      php ${base_dir}/src/php/admin/SqlRunner.php $sql_file
     fi
   done
 }
