@@ -7,15 +7,10 @@ class SqlRunner {
 	protected $user;
 	protected $pwd;
 	protected $db;
-
-	protected $reference_schema;
-	protected $vertex_schema;
 	protected $odbc_dsn;
 
 	public function run($file_name) {
 
-		$this->reference_schema = getenv("vertex_vertica_reference_schema");
-		$this->vertex_schema = getenv("vertex_vertica_vertex_schema");
 		$this->user = getenv("vertex_vertica_user");
 		$this->pwd = getenv("vertex_vertica_password");
 		$this->odbc_dsn = getenv("vertex_vertica_odbc_dsn");
@@ -29,7 +24,6 @@ class SqlRunner {
 
 		$sql_to_run = file_get_contents($file_name);
 
-		//print($sql_to_run . "\n");
 		try {
 			$this->db->exec($sql_to_run);
 		} catch (PDOException $e) {
@@ -40,6 +34,15 @@ class SqlRunner {
 	}
 }
 
+if ($argc != 2) {
+	print("Usage: php $argv[0] <sql_filename>\n
+The SQL in <sql_filename> will be run using the username, password and ODBC DSN as
+specified in the environment variables:
+vertex_vertica_user
+vertex_vertica_password
+vertex_vertica_odbc_dsn\n");
+	exit;
+}
 $runner = new SqlRunner();
 $file_name = $argv[1];
 $runner->run($file_name);
