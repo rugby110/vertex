@@ -1,4 +1,3 @@
---VERTEX_NO_DEPLOY
 create or replace view vertex_fact_managed_account_statistics as
 
 
