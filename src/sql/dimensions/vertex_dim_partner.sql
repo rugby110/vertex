@@ -17,14 +17,14 @@ select  p.id as partner_id,
 	p.credit_tier
 	
 
-from verse.verse_ods_kiva_partner p
+from partner p
 
 /*  historical data for slowly-changing dimension
 -- activation enabled
 left join (select on_what_id AS partner_id,
 	          new_value  AS activation_enabled,
 		  create_time AS activation_enabled_time
-	   from verse.verse_ods_kiva_admin_audit_log
+	   from admin_audit_log
 	   where on_what_table = 'partner'
 		 and on_what_column = 'activation_enabled') en on en.partner_id = p.id 
 		 
@@ -32,13 +32,13 @@ left join (select on_what_id AS partner_id,
 left join (select partner_id, 
 		  new_value as activation_overall_limit,
 		  create_time as activation_overall_limit_time
-	   from verse.verse_ods_kiva_activation_overall_limit_history) ol on ol.partner_id = p.id 
+	   from activation_overall_limit_history) ol on ol.partner_id = p.id
 	   
 -- DAF eligible loans
 left join (select on_what_id AS partner_id,
 		  new_value  AS loans_are_daf_eligible,
 		  create_time AS loans_are_daf_eligible_time
-	   from verse.verse_ods_kiva_admin_audit_log
+	   from admin_audit_log
 	   where on_what_table = 'partner'
 		 and on_what_column  = 'loans_are_daf_eligible') daf on daf.partner_id = p.id
 

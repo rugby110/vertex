@@ -10,9 +10,9 @@ select TO_CHAR(ma.fund_account_id) || TO_CHAR('_') || COALESCE(TO_CHAR(pf.id), '
 			ffa.loan_repayment_currency_loss_total + ffa.loan_default_total as total_amount_lost,
 			ffa.loan_refund_total + ffa.loan_expired_total as total_amount_refunded,
 			ffa.loan_purchase_num + ffa.loan_purchase_auto_num + ffa.fundpool_match_num + ffa.kivapool_match_num - ffa.loan_refund_num - ffa.loan_expired_num as number_loans
-from verse.verse_ods_kiva_managed_account ma
+from managed_account ma
 inner join vertex_fact_fund_account ffa on ma.fund_account_id = ffa.fund_account_id
-left join verse.verse_ods_kiva_promo_fund pf on ma.fund_account_id = pf.fund_account_id
+left join promo_fund pf on ma.fund_account_id = pf.fund_account_id
 
 --include where clause?? see CS-4616, exclude Kiva loan share recapture accounts because of MySQL BigInt overflow problem
 --where fa.fund_account_id not in (1155230, 1155231)

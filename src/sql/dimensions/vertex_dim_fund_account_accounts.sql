@@ -26,13 +26,13 @@ select lfam.login_id as owner_login_id,
 	port.e_current_portfolio_repaid
 
 
-from verse.verse_ods_kiva_fund_account fa
-inner join verse.verse_ods_kiva_login_fund_account_mapper lfam on fa.id = lfam.fund_account_id
+from fund_account fa
+inner join login_fund_account_mapper lfam on fa.id = lfam.fund_account_id
 inner join vertex_dim_accounting_category dac on dac.accounting_category = fa.accounting_category
-left join verse.verse_ods_kiva_user_account_type uat on fa.user_account_type = uat.id
-left join verse.verse_ods_kiva_source_of_funds src_fund on fa.source_of_funds = src_fund.id
-left join verse.verse_ods_kiva_contact_info contact_info on contact_info.id=fa.billing_contact_id
-left join verse.verse_ods_kiva_geo_state_codes geo_state_codes on geo_state_codes.postal_code = contact_info.state and contact_info.country_id = 227
+left join user_account_type uat on fa.user_account_type = uat.id
+left join source_of_funds src_fund on fa.source_of_funds = src_fund.id
+left join contact_info contact_info on contact_info.id=fa.billing_contact_id
+left join geo_state_codes geo_state_codes on geo_state_codes.postal_code = contact_info.state and contact_info.country_id = 227
 
 -- portfolio aggregates:
 left join (select fa.id as fund_account_id,
@@ -40,11 +40,11 @@ left join (select fa.id as fund_account_id,
 			sum(llp.purchase_amt)          as current_portfolio_total,
 			sum((llp.purchase_amt/l.price) * (l.price-rs.settled_total)) as e_current_portfolio_outstanding,
 			sum((llp.purchase_amt/l.price) * (rs.settled_total))             as e_current_portfolio_repaid
-        from verse.verse_ods_kiva_fund_account fa
-        inner join verse.verse_ods_kiva_lender_loan_purchase llp on llp.lender_fund_account_id=fa.id
-        inner join verse.verse_ods_kiva_loan l on l.id=llp.loan_id and l.status in ('payingBack','raised','fundRaising')
+        from fund_account fa
+        inner join lender_loan_purchase llp on llp.lender_fund_account_id=fa.id
+        inner join loan l on l.id=llp.loan_id and l.status in ('payingBack','raised','fundRaising')
         left join (select loan_id, sum(settled_price) as settled_total
-                        from verse.verse_ods_kiva_repayment_settled
+                        from repayment_settled
                         group by loan_id) rs on rs.loan_id = l.id
         group by fa.id) port on port.fund_account_id = fa.id
 

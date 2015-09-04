@@ -24,7 +24,7 @@ select
 	     else 
 	     ccg.name
 	end as reporting_group
-from verse.verse_ods_kiva_credit_change_type cct
+from credit_change_type cct
 left join vertex_credit_change_group_map ccgm on cct.id = ccgm.credit_change_type_id
 left join vertex_credit_change_group ccg on ccgm.credit_change_group_id = ccg.id
 

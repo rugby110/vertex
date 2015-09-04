@@ -14,4 +14,4 @@ select
         case when source='jg' then ''
              else COALESCE(campaign_content,'')
         end as campaign_content
-from verse.verse_ods_www_referrer
+from verse_ods_www_referrer;

@@ -8,10 +8,10 @@ select  llp.lender_fund_account_id as acquired_fund_account_id, lfam.login_id as
   case when fa.deposit_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_depositor,
   case when fa.donation_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_donor,
   case when fa.gift_purchase_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_card_purchaser
-from verse.verse_ods_kiva_lender_loan_purchase llp
+from lender_loan_purchase llp
 inner join vertex_dim_managed_account ma on llp.repayment_fund_account_id = ma.fund_account_id
 inner join vertex_dim_fund_account fa on fa.fund_account_id=llp.lender_fund_account_id --and fa.v_current
-inner join verse.verse_ods_kiva_login_fund_account_mapper lfam on llp.lender_fund_account_id = lfam.fund_account_id and lfam.is_owner = 'yes'
+inner join login_fund_account_mapper lfam on llp.lender_fund_account_id = lfam.fund_account_id and lfam.is_owner = 'yes'
 where llp.settlement_type in ('promo', 'proxy_credit')
 and ma.management_type in ('promo_card', 'free_trial')
 group by llp.lender_fund_account_id, lfam.login_id, ma.fund_account_id, ma.management_type, fa.cc_all_first_day_id, fa.loan_purchase_first_day_id, fa.deposit_first_day_id, fa.donation_first_day_id, fa.gift_purchase_first_day_id
@@ -26,16 +26,16 @@ select lfam.fund_account_id as acquired_fund_account_id, i.invitee_id as acquire
  case when fa.deposit_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_depositor,
  case when fa.donation_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_donor,
  case when fa.gift_purchase_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_card_purchaser
-from verse.verse_ods_kiva_invitation i
-inner join verse.verse_ods_kiva_lender_promo_credit lpc on i.inviter_id = lpc.lender_account_id and i.created_as_type = 'invite' and i.id = lpc.ref_id
-inner join verse.verse_ods_kiva_promo_fund pf on pf.id = lpc.promo_fund_id and lpc.award_type = 'invitation' and lpc.amount_at_creation-lpc.amount_unredeemed > 0
+from invitation i
+inner join lender_promo_credit lpc on i.inviter_id = lpc.lender_account_id and i.created_as_type = 'invite' and i.id = lpc.ref_id
+inner join promo_fund pf on pf.id = lpc.promo_fund_id and lpc.award_type = 'invitation' and lpc.amount_at_creation-lpc.amount_unredeemed > 0
 inner join vertex_dim_fund_account fa on fa.fund_account_id=i.invitee_id --and fa.v_current
-inner join verse.verse_ods_kiva_login_fund_account_mapper lfam on i.invitee_id = lfam.login_id and lfam.is_owner = 'yes'
+inner join login_fund_account_mapper lfam on i.invitee_id = lfam.login_id and lfam.is_owner = 'yes'
 inner join (select lfam.fund_account_id as invitee_fund_account_id, i.date_confirmed, pf.fund_account_id, lpc.amount_at_creation, lpc.amount_unredeemed
-        		from verse.verse_ods_kiva_invitation i
-        		inner Join verse.verse_ods_kiva_lender_promo_credit lpc on i.inviter_id = lpc.lender_account_id and i.created_as_type = 'invite' and i.id = lpc.ref_id
-        		inner Join verse.verse_ods_kiva_promo_fund pf on pf.id = lpc.promo_fund_id
-        		inner join verse.verse_ods_kiva_login_fund_account_mapper lfam on i.invitee_id = lfam.login_id and lfam.is_owner = 'yes'
+        		from invitation i
+        		inner Join lender_promo_credit lpc on i.inviter_id = lpc.lender_account_id and i.created_as_type = 'invite' and i.id = lpc.ref_id
+        		inner Join promo_fund pf on pf.id = lpc.promo_fund_id
+        		inner join login_fund_account_mapper lfam on i.invitee_id = lfam.login_id and lfam.is_owner = 'yes'
         		where lpc.award_type = 'invitation' and i.created_as_type = 'invite' and lpc.amount_at_creation-lpc.amount_unredeemed > 0)  lpci
 	     on lfam.fund_account_id = lpci.invitee_fund_account_id and pf.fund_account_id = lpci.fund_account_id
 group by lfam.fund_account_id, i.invitee_id, pf.fund_account_id, promo_type, fa.cc_all_first_day_id, fa.loan_purchase_first_day_id, fa.deposit_first_day_id, fa.donation_first_day_id, fa.gift_purchase_first_day_id;

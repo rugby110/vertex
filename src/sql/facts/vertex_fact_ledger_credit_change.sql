@@ -14,7 +14,7 @@ select id as ledger_credit_change_id,
 	type_id as credit_change_type_id,
 	fa.accounting_category_id
 				
-from verse.verse_ods_kiva_ledger_credit_change lcc
+from ledger_credit_change lcc
 left join vertex_dim_fund_account_accounts fa on fa.fund_account_id=lcc.fund_account_id
 ;
 

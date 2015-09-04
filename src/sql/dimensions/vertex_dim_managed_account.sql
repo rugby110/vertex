@@ -22,12 +22,12 @@ select TO_CHAR(ma.fund_account_id) || TO_CHAR('_') || COALESCE(TO_CHAR(pf.id), '
 			pg.type as promo_group_type,
 			COALESCE(pg.team_id, 0) as team_id
 			
-from verse.verse_ods_kiva_managed_account ma
-inner join verse.verse_ods_kiva_contract_entity ce on ma.contract_entity_id = ce.id
+from managed_account ma
+inner join contract_entity ce on ma.contract_entity_id = ce.id
 inner join vertex_dim_fund_account fa on ma.fund_account_id = fa.fund_account_id
-left join verse.verse_ods_kiva_login lo on ce.account_manager_id = lo.id
-left join verse.verse_ods_kiva_person p on lo.person_id = p.id
-left join verse.verse_ods_kiva_promo_fund pf on fa.fund_account_id = pf.fund_account_id
-left join verse.verse_ods_kiva_promo_group pg on pf.promo_group_id = pg.id
+left join login lo on ce.account_manager_id = lo.id
+left join person p on lo.person_id = p.id
+left join promo_fund pf on fa.fund_account_id = pf.fund_account_id
+left join promo_group pg on pf.promo_group_id = pg.id
 --include where clause?? see CS-4616, exclude Kiva loan share recapture accounts because of MySQL BigInt overflow problem
 --where fa.fund_account_id not in (1155230, 1155231)

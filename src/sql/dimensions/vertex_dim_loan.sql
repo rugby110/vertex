@@ -94,30 +94,30 @@ select l.id as loan_id,
 	
 	
 
-from verse.verse_ods_kiva_loan l
+from loan l
 
-inner join verse.verse_ods_kiva_business b on b.id=l.business_id
-left join verse.verse_ods_kiva_activity_mapper am on am.activity_id=b.activity_id
-left join verse.verse_ods_kiva_town t on t.id=b.town_id
-left join verse.verse_ods_kiva_loan_theme_type ltt on ltt.id=l.loan_theme_type_id
-left join verse.verse_ods_kiva_business_link bl on bl.to_business_id=b.id
+inner join business b on b.id=l.business_id
+left join activity_mapper am on am.activity_id=b.activity_id
+left join town t on t.id=b.town_id
+left join loan_theme_type ltt on ltt.id=l.loan_theme_type_id
+left join business_link bl on bl.to_business_id=b.id
 
 left join (select l.id as loan_id, 
                 GROUP_CONCAT(s.name) 
                 over (partition by l.id) as sp_badges
-           from verse.verse_ods_kiva_loan l
-           inner join verse.verse_ods_kiva_business b on b.id=l.business_id
-           inner join verse.verse_ods_kiva_partner_sp_strength_mapper sm on sm.partner_id=b.partner_id AND sm.create_time <= l.raised_time
-           inner join verse.verse_ods_kiva_partner_sp_strength s on s.id=sm.strength_id
+           from loan l
+           inner join business b on b.id=l.business_id
+           inner join partner_sp_strength_mapper sm on sm.partner_id=b.partner_id AND sm.create_time <= l.raised_time
+           inner join partner_sp_strength s on s.id=sm.strength_id
            where sm.active
            ) sp on sp.loan_id = l.id
            
 left join (select l.id as loan_id, -- can't add anything else with over clause, above
            count(1) as sp_num_badges
-           from verse.verse_ods_kiva_loan l
-           inner join verse.verse_ods_kiva_business b on b.id=l.business_id
-           inner join verse.verse_ods_kiva_partner_sp_strength_mapper sm on sm.partner_id=b.partner_id AND sm.create_time <= l.raised_time
-           inner join verse.verse_ods_kiva_partner_sp_strength s on s.id=sm.strength_id
+           from loan l
+           inner join business b on b.id=l.business_id
+           inner join partner_sp_strength_mapper sm on sm.partner_id=b.partner_id AND sm.create_time <= l.raised_time
+           inner join partner_sp_strength s on s.id=sm.strength_id
            where sm.active
            group by l.id
            ) sp_num on sp_num.loan_id = l.id           
@@ -131,8 +131,8 @@ left join (select business_id, coalesce(count(distinct em.person_id),0) as num_e
 		  sum(case when p.gender='male' then 1 else 0 end) as gender_num_male,
 		  sum(case when p.gender='female' then 1 else 0 end) as gender_num_female,
 		  sum(case when p.gender='unspecified' then 1 else 0 end) as gender_num_unspecified
-	   from verse.verse_ods_kiva_entrep_mapper em 
-	   left join verse.verse_ods_kiva_person p on p.id = em.person_id
+	   from entrep_mapper em
+	   left join person p on p.id = em.person_id
 	   group by business_id) entreps on entreps.business_id = l.business_id	
 		  
 -- Journals
@@ -140,7 +140,7 @@ left join (select business_id,
 		  count(1) as num_journals_total,
                   count(case when type='single_loan' or type='relisting' then 1 else null end) as num_journals_rate_eligible,
                   count(case when type='single_loan' or type='relisting' then null else 1 end) as num_journals_rate_ineligible
-           from verse.verse_ods_kiva_journal_entry 
+           from journal_entry
            group by business_id) jrnls on jrnls.business_id = l.business_id		  		     
            
 -- SharesPurchased
@@ -149,7 +149,7 @@ left join (select loan_id,
                   sum(purchase_amt) as shares_purchased_total,
 		  min(purchase_time) as shares_purchased_first_time,
 		  max(purchase_time) as shares_purchased_last_time
-            from verse.verse_ods_kiva_lender_loan_purchase
+            from lender_loan_purchase
 	    group by loan_id) shares on shares.loan_id = l.id     
 	    
 -- RepaymentExpected
@@ -157,7 +157,7 @@ left join (select loan_id,
                   count(1) as num_repayment_expected,
 		  max(effective_time) as final_repayment_expected_time,
 		  ADD_MONTHS(TO_TIMESTAMP(max(effective_time)), 6) as default_limit_timestamp
-           from verse.verse_ods_kiva_repayment_expected
+           from repayment_expected
 	   group by loan_id) re on re.loan_id = l.id  
 		  
 -- RepaymentSettled
@@ -170,7 +170,7 @@ left join (select loan_id,
                   sum(settled_currency_loss_lenders) as currency_loss_lenders_total,
                   min(case when settled_currency_loss_lenders>0 then settlement_time else null end) as currency_loss_lenders_first_time,
                   max(case when settled_currency_loss_lenders>0 then settlement_time else null end) as currency_loss_lenders_last_time
-           from verse.verse_ods_kiva_repayment_settled
+           from repayment_settled
 	   group by loan_id) rs on rs.loan_id=l.id	  
 
 ;

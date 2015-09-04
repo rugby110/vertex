@@ -3,7 +3,7 @@ WITH credit_change_types_to_fix as (
         SELECT
             id as credit_change_type_id
         FROM
-            verse.verse_ods_kiva_credit_change_type
+            credit_change_type
         WHERE
             table_name = 'credit_change'
         AND type_name IN ('deposit',
@@ -52,9 +52,9 @@ select
 	fa.user_account_type, 
 	dfa.accounting_category_id
 from
-        verse.verse_ods_kiva_credit_change cc
-left join verse.verse_ods_kiva_fund_account fa on fa.id = fund_account_id
-left join verse.verse_ods_kiva_transaction trans on trans.id = cc.trans_id
+        credit_change cc
+left join fund_account fa on fa.id = fund_account_id
+left join transaction trans on trans.id = cc.trans_id
 left join vertex_dim_fund_account_accounts dfa on fa.id = dfa.fund_account_id
 inner join vertex_dim_credit_change_type dcct on dcct.credit_change_type_id = 
 	case
