@@ -48,8 +48,6 @@ class DimensionManagedAccountBorrowerStatisticsTest extends Kiva\Vertex\Testing\
 			WHERE fact_cc.fund_account_id > 0 and loan.loan_id is not null
 			and CASE
                 WHEN fact_cc.dim_credit_change_type_id IN (49, 69, 64, 152, 42, 24, 71)
-                -- ('promo_loan_credit', 'kivapool_match', 'fundpool_match', 'loan_share_recapture', 'm_loan_purchase_void', 'loan_purchase', 'loan_purchase_auto'))
-
                 THEN -price
                 ELSE 0
             END > 0;");

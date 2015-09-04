@@ -1,4 +1,3 @@
---VERTEX_NO_DEPLOY
 create or replace view vertex_dim_managed_account_borrower_statistics as
  
 with cc as (
