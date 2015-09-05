@@ -18,4 +18,12 @@ class DimensionCountryTest extends Kiva\Vertex\Testing\VertexTestCase {
 
 		$this->assertEquals($count_from_kiva_ods,$count_from_vertex);
 	}
+
+	public function testSampleEntry() {
+		$result = $this->db->query("select * from " . $this->vertex_schema . ".vertex_dim_country where name = 'Brazil'");
+		$row= $result->fetch(PDO::FETCH_ASSOC);
+
+		$this->assertEquals("South America",$row['irs_region']);
+		$this->assertEquals("BRA",$row['country_code']);
+	}
 }
