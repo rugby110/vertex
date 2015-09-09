@@ -16,9 +16,12 @@ grant all on schema bamboo to bamboo with grant option;
 create schema IF NOT EXISTS dthomas AUTHORIZATION dthomas;
 grant all on schema dthomas to dthomas with grant option;
 
+create schema IF NOT EXISTS jake AUTHORIZATION jake;
+grant all on schema jake to jake with grant option;
+
 -- grant verse schema access 
-grant usage on schema verse to vertex, van, nikkiw, sam, looker, bamboo, dthomas;
-grant select on all tables in schema verse to van, nikkiw, sam, looker, bamboo, dthomas;
+grant usage on schema verse to vertex, van, nikkiw, sam, looker, bamboo, dthomas, jake;
+grant select on all tables in schema verse to van, nikkiw, sam, looker, bamboo, dthomas, jake;
 
 -- this is a key requirement, the vertex user needs to be granted
 --   select ... WITH GRANT OPTION for the tables in the verse in order to grant
@@ -26,8 +29,8 @@ grant select on all tables in schema verse to van, nikkiw, sam, looker, bamboo, 
 grant select on all tables in schema verse to vertex with grant option;
 
 -- grant vertex schema access
-grant usage on schema vertex to van, nikkiw, sam, looker, bamboo, dthomas;
-grant select on all tables in schema vertex to van, nikkiw, sam, looker, bamboo, dthomas;
+grant usage on schema vertex to van, nikkiw, sam, looker, bamboo, dthomas, jake;
+grant select on all tables in schema vertex to van, nikkiw, sam, looker, bamboo, dthomas, jake;
 
 -- select rights need to be granted to each view as in the line below 
 -- grant select on vertex.vertex_dim_credit_change_type to vertex_read_only_view_role;
@@ -36,7 +39,7 @@ grant select on all tables in schema vertex to van, nikkiw, sam, looker, bamboo,
 
 -- creation of the role will fail after it has been run once, but no harm is done
 create role vertex_read_only_view_role; 
-grant vertex_read_only_view_role to van, nikkiw, sam, looker, bamboo, dthomas;
+grant vertex_read_only_view_role to van, nikkiw, sam, looker, bamboo, dthomas, jake;
 
 -- grant vertex schema access
 grant usage on schema ods_kiva to vertex_read_only_view_role;
@@ -48,5 +51,6 @@ alter user sam default role vertex_read_only_view_role;
 alter user looker default role vertex_read_only_view_role;
 alter user bamboo default role vertex_read_only_view_role;
 alter user dthomas default role vertex_read_only_view_role;
+alter user jake default role vertex_read_only_view_role;
 
 GRANT EXECUTE ON TRANSFORM FUNCTION group_concat(Varchar) to vertex_read_only_view_role;
