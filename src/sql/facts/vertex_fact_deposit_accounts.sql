@@ -67,7 +67,7 @@ inner join (select owner_login_id, create_day_id as reg_day_id
 where credit_change_type_id in (
         select credit_change_type_id from deposit_types)
 
-and  cc.fund_account_id = 1803146
+/* remove me */ and cc.fund_account_id = 1803146
 
 order by cc.effective_time;
 
