@@ -9,6 +9,7 @@
 class VertexTestCase extends \PHPUnit_Framework_TestCase{
 	protected $user;
 	protected $pwd;
+	/** @var $db \PDO */
 	protected $db;
 
 	protected $reference_schema;
@@ -26,7 +27,7 @@ class VertexTestCase extends \PHPUnit_Framework_TestCase{
 
 		try {
 			$this->db = new \PDO("odbc:" . $this->odbc_dsn, $this->user, $this->pwd);
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			echo $e->getMessage() . "\n";
 		}
 
