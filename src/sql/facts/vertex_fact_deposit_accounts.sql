@@ -5,6 +5,24 @@ create or replace view vertex_fact_deposit_accounts as
 with manual_types as (
         select credit_change_type_id from vertex_dim_credit_change_type where type_name like 'm_%'
 ),
+check_types as (
+        select credit_change_type_id 
+        from vertex_dim_credit_change_type
+	where type_name like 'm_check_deposit%'
+	and source_table_name = 'credit_change'
+),
+echeck_types as (
+        select credit_change_type_id 
+        from vertex_dim_credit_change_type
+	where type_name like 'echeck%'
+	and source_table_name = 'credit_change'
+),
+mwire_types as (
+        select credit_change_type_id 
+        from vertex_dim_credit_change_type
+	where type_name like 'm_wire%'
+	and source_table_name = 'credit_change'
+),
 deposit_types as (
         select credit_change_type_id 
         from vertex_dim_credit_change_type
@@ -29,6 +47,18 @@ select  cc.credit_change_id,
 	cc.user_account_type,
 	cc.accounting_category_id,
 	cc.credit_change_type_id,
+	case when cc.credit_change_type_id in (select credit_change_type_id from check_types)
+	       then true
+	       else false
+	       end as is_check_deposit, 
+	case when cc.credit_change_type_id in (select credit_change_type_id from echeck_types)
+	       then true
+	       else false
+	       end as is_echeck, 
+	case when cc.credit_change_type_id in (select credit_change_type_id from mwire_types)
+	       then true
+	       else false
+	       end as is_wire,              
 	case when cc.credit_change_type_id in (select credit_change_type_id from manual_types)
 	       then true
 	       else false
@@ -42,7 +72,6 @@ select  cc.credit_change_id,
 	       then -abs(price)
 	       else abs(price)
 	       end as amount,
-	fpt.first_effective_day_id,
 	case when (fpt.first_effective_day_id = fa.reg_day_id
 		   and fpt.first_effective_day_id = effective_day_id)
 	     then 'new'
@@ -66,8 +95,6 @@ inner join (select owner_login_id, create_day_id as reg_day_id
 
 where credit_change_type_id in (
         select credit_change_type_id from deposit_types)
-
-/* remove me */ and cc.fund_account_id = 1803146
 
 order by cc.effective_time;
 
