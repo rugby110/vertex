@@ -8,6 +8,9 @@
 --create user bamboo identified by 'pwd';
 --create user dthomas identified by 'pwd';
 --create user jake identified by 'pwd';
+--create user zahid identified by 'pwd';
+--create user amy identified by 'pwd';
+
 
 grant authentication host_pass to mike;
 grant authentication local_pass to mike;
@@ -29,6 +32,10 @@ grant authentication host_pass to dthomas;
 grant authentication local_pass to dthomas;
 grant authentication host_pass to jake;
 grant authentication local_pass to jake;
+grant authentication host_pass to zahid;
+grant authentication local_pass to zahid;
+grant authentication host_pass to amy;
+grant authentication local_pass to amy;
 
 alter user mike search_path "$user", ods_kiva, verse, public;
 alter user van search_path "$user", ods_kiva, verse, public;
@@ -37,3 +44,5 @@ alter user looker search_path "$user", vertex, ods_kiva, verse, public;
 alter user bamboo search_path "$user", ods_kiva, verse, public;
 alter user dthomas search_path "$user", ods_kiva, verse, public;
 alter user jake search_path "$user", ods_kiva, verse, public;
+alter user zahid search_path "$user", ods_kiva, verse, public;
+alter user amy search_path "$user", ods_kiva, verse, public;
