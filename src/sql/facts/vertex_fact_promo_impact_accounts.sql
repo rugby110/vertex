@@ -16,7 +16,7 @@ where llp.settlement_type in ('promo', 'proxy_credit')
 and ma.management_type in ('promo_card', 'free_trial')
 group by llp.lender_fund_account_id, lfam.login_id, ma.fund_account_id, ma.management_type, fa.cc_all_first_day_id, fa.loan_purchase_first_day_id, fa.deposit_first_day_id, fa.donation_first_day_id, fa.gift_purchase_first_day_id
 
-union distinct
+union
 
 select lfam.fund_account_id as acquired_fund_account_id, i.invitee_id as acquired_login_id, pf.fund_account_id as managed_account_id, 'bonus' as promo_type,
  min(lpci.date_confirmed) as acquired_time, TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD') as acquired_day_id,
