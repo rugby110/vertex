@@ -13,6 +13,6 @@ select distinct
 	t.name as name,
 	t.country_id as country_id,
 	t.id as town_id,
-	c.irs_region as lender_region_id
+	c.region as lender_region_id
 from town t
-	left join vertex_dim_country c on t.country_id = c.country_id
+	left join country c on t.country_id = c.id
