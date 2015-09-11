@@ -1,3 +1,6 @@
+/**
+TODO:  move measures to vertex_fact_loan?
+ */
 create or replace view vertex_dim_loan as
 
 select l.id as loan_id,
