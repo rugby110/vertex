@@ -59,6 +59,7 @@ select  cc.credit_change_id,
         cc.fund_account_id,
         cc.item_id,
         cc.trans_id as transaction_id,
+        --mref.referrer_id,
         cc.user_account_type,
         cc.accounting_category_id,
         cc.credit_change_type_id,
@@ -140,10 +141,11 @@ inner join (select fund_account_id, first_effective_day_id
             from first_purchases 
            ) fpt on fpt.fund_account_id=cc.fund_account_id
            
-inner join (select owner_login_id, create_day_id as reg_day_id
-	    from vertex_dim_fund_account_accounts) fa on fa.owner_login_id=cc.fund_account_id	  
-	    
-inner join (select kd.id, kd.matcher_id,
+inner join (select fund_account_id, create_day_id as reg_day_id
+	    from vertex_dim_fund_account_accounts) fa on fa.fund_account_id=cc.fund_account_id  
+
+-- cc.item_ids are null, changed inner to left join	
+left join (select kd.id, kd.matcher_id,
                 case when kd.matcher_id is not null 
                         then true
                         else false
@@ -151,8 +153,18 @@ inner join (select kd.id, kd.matcher_id,
                 kdm.name as matcher_name
             from donation kd 
             left join donation_matcher kdm on kdm.id=kd.matcher_id
-            ) dm on dm.id=cc.item_id             
+            ) dm on dm.id=COALESCE(cc.item_id, 0)
+
+--left join (select e.item_id as credit_change_id, min(dim.referrer_id) as referrer_id
+           --from verse_ods_www_event e
+           --inner join verse_ods_www_document doc on (e.document_id=doc.v_id AND doc.category='credit_change')
+           --inner join verse_ods_www_trackingsession ts on ts.v_id=e.trackingsession_id
+           --inner join verse_ods_www_referrer_clean ref on ref.v_id=ts.referrer_id
+           --inner join vertex_dim_www_referrer dim on 
+                   --ref.source=dim.source AND ref.medium=dim.medium AND ref.campaign=dim.campaign AND ref.campaign_content=dim.campaign_content
+           --group by e.item_id) mref on mref.credit_change_id=cc.credit_change_id                      
 
 where credit_change_type_id in (
-        select credit_change_type_id from donation_types);
+        select credit_change_type_id from donation_types)
+;
 
