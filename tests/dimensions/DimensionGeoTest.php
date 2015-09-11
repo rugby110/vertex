@@ -24,4 +24,6 @@ class DimensionGeoTest extends Kiva\Vertex\Testing\VertexTestCase {
 		$this->assertEquals((int)$result->fetchColumn(), 0);
 	}
 
+	//todo  foreign key reference check to vertex_dim_lender_region
+
 }
