@@ -37,6 +37,7 @@ grant authentication local_pass to zahid;
 grant authentication host_pass to amy;
 grant authentication local_pass to amy;
 
+alter user vertex search_path "$user", ods_kiva, verse, public;
 alter user mike search_path "$user", ods_kiva, verse, public;
 alter user van search_path "$user", ods_kiva, verse, public;
 alter user nikkiw search_path "$user", ods_kiva, verse, public;
