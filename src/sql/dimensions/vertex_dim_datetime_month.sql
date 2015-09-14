@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS vertex_dim_datetime_month;
 
+-- use info from the first day of each month to populate the month table
 SELECT YEAR(full_date)*100 + MONTH(full_date) as datetime_month_id,
         full_date,
         full_time, 
@@ -14,11 +15,3 @@ SELECT YEAR(full_date)*100 + MONTH(full_date) as datetime_month_id,
 into vertex_dim_datetime_month
 from vertex_dim_datetime_day
 where day=1;
-
-select count(*) from vertex_dim_datetime_month
-order by datetime_month_id
-limit 10
-
-select * from verse_dim_datetime_month
-order by v_id
-limit 10
