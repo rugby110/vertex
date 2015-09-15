@@ -27,7 +27,7 @@ class FactOperationsCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCase 
 		$count_from_vertex = $result->fetchColumn();
 
 		$result = $this->db->query("select count(1) as how_many
-			from $this->reference_schema.verse_ods_kiva_operations_credit_change
+			from $this->reference_schema.verse_fact_operations_credit_change
 			where admin_user_id > 0");
 		$count_from_verse = $result->fetchColumn();
 
