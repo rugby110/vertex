@@ -32,7 +32,7 @@ OFFSET 10;
 DROP TABLE IF EXISTS vertex_dim_datetime_day;
 
 CREATE TABLE vertex_dim_datetime_day ( 
-     id         INT,
+     datetime_day_id         INT,
      full_date  TIMESTAMP,     
      full_time  INT,
      year       INT, 
@@ -66,7 +66,7 @@ CREATE TABLE vertex_dim_datetime_day (
 
 -- populate the datetime table by joining on the numbers table
 INSERT INTO vertex_dim_datetime_day (
-        id, 
+        datetime_day_id, 
         full_date, 
         full_time, 
         year, quarter, month, week, day, 
