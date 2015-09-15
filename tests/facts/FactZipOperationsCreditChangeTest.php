@@ -20,15 +20,15 @@ class FactZipOperationsCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCa
 		$this->assertEquals($count_from_ods,$count_from_fact);
 	}
 
-	public function testAdminUserIdCount() {
+	public function testCreditChangeTypeIdCount() {
 		$result = $this->db->query("select count(1) as how_many
 			from $this->vertex_schema.vertex_fact_zip_operations_credit_change
-			where admin_user_id > 0");
+			where credit_change_type_id > 0");
 		$count_from_vertex = $result->fetchColumn();
 
 		$result = $this->db->query("select count(1) as how_many
 			from $this->reference_schema.verse_fact_zip_operations_credit_change
-			where admin_user_id > 0");
+			where dim_credit_change_type_id  > 0");
 		$count_from_verse = $result->fetchColumn();
 
 		$this->assertSame($count_from_verse,$count_from_vertex);
