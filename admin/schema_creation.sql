@@ -3,9 +3,7 @@ create schema IF NOT EXISTS vertex AUTHORIZATION vertex;
 create schema IF NOT EXISTS ods_kiva AUTHORIZATION vertex;
 grant all on schema vertex to vertex with grant option;
 grant all on schema ods_kiva to vertex with grant option;
-grant usage on schema vertex to devpush;
 grant all on schema vertex to devpush with grant option;
-grant usage on schema ods_kiva to devpush;
 grant all on schema ods_kiva to devpush;
 
 -- verse schemas
