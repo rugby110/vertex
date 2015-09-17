@@ -8,7 +8,7 @@ select lcc.id as zip_ledger_credit_change_id,
 			WHEN fa.contract_entity_id = 1 THEN (select id from vertex_dim_accounting_category where accounting_category = 'kmf')
 			ELSE (select id from vertex_dim_accounting_category where accounting_category = 'managed_account')
 	END as accounting_category_id,
-  lcc.fund_account_id,
+  COALESCE(lcc.fund_account_id, 0) as fund_account_id,
   lcc.partner_id,
   lcc.price,
   'USD' as currency,
