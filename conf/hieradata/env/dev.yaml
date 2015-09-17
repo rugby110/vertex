@@ -1,0 +1,7 @@
+---
+conf:
+  vertex_vertica_host: "vertex-dev.kiva.org"
+  vertex_vertica_odbc_dsn: "vertex_dev"
+  vertex_vertica_vertex_schema: "devpush"
+  vertex_vertica_user: "lpass:vertex_vertica_dev:username"
+  vertex_vertica_password: "lpass:vertex_vertica_dev:password"
