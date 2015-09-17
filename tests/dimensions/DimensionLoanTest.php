@@ -91,4 +91,14 @@ class DimensionLoanTest extends Kiva\Vertex\Testing\VertexTestCase
 
 		$this->assertSame($from_dim,$from_vertex);
 	}
+
+	public function testDafEligible() {
+		//ensure 2 possible values
+		$val_count = $this->db->query("select distinct daf_eligible from $this->reference_schema.verse_ods_kiva_loan");
+		$this->assertSame($val_count->rowCount() , 2); //'yes' and 'no'
+		//and, check the counts.
+		$ref = $this->db->query("select daf_eligible, count(1) as count from $this->reference_schema.verse_ods_kiva_loan group by daf_eligible order by daf_eligible asc");
+		$vertex = $this->db->query("select daf_eligible, count(1) as count from $this->vertex_schema.vertex_dim_loan group by daf_eligible order by daf_eligible asc");
+		$this->assertSame($ref->fetchAll(), $vertex->fetchAll());
+	}
 }
