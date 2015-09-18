@@ -10,6 +10,8 @@
 --create user jake identified by 'pwd';
 --create user zahid identified by 'pwd';
 --create user amy identified by 'pwd';
+--create user devpush identified by 'pwd';
+--create user tungsten_dev identified by 'pwd';
 
 
 grant authentication host_pass to mike;
@@ -36,6 +38,9 @@ grant authentication host_pass to zahid;
 grant authentication local_pass to zahid;
 grant authentication host_pass to amy;
 grant authentication local_pass to amy;
+grant authentication host_pass to devpush;
+grant authentication local_pass to devpush;
+grant authentication host_pass to tungsten_dev;
 
 alter user vertex search_path "$user", ods_kiva, verse, public;
 alter user mike search_path "$user", ods_kiva, verse, public;
@@ -47,3 +52,4 @@ alter user dthomas search_path "$user", ods_kiva, verse, public;
 alter user jake search_path "$user", ods_kiva, verse, public;
 alter user zahid search_path "$user", ods_kiva, verse, public;
 alter user amy search_path "$user", ods_kiva, verse, public;
+alter user devpush search_path "$user", ods_kiva, verse, public; -- change $user to vertex when ready

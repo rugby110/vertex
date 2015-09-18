@@ -1,7 +1,7 @@
 drop table if exists vertex_dim_accounting_category;
 
 create table vertex_dim_accounting_category (
-        id                      integer not null,
+        accounting_category_id                      integer not null,
         accounting_category     varchar(40)
 );
 

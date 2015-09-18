@@ -26,13 +26,8 @@ create schema IF NOT EXISTS amy AUTHORIZATION amy;
 grant all on schema amy to amy with grant option;
 
 -- grant verse schema access 
-grant usage on schema verse to vertex, van, nikkiw, sam, looker, bamboo, dthomas, jake, zahid, amy;
-grant select on all tables in schema verse to vertex, van, nikkiw, sam, looker, bamboo, dthomas, jake, zahid, amy;
-
--- this is a key requirement, the vertex user needs to be granted
---   select ... WITH GRANT OPTION for the tables in the verse in order to grant
---   usage to others for the views which pull from the verse tables
-grant select on all tables in schema verse to vertex with grant option;
+grant usage on schema verse to van, nikkiw, sam, looker, bamboo, dthomas, jake, zahid, amy;
+grant select on all tables in schema verse to van, nikkiw, sam, looker, bamboo, dthomas, jake, zahid, amy;
 
 -- grant vertex schema access
 grant usage on schema vertex to van, nikkiw, sam, looker, bamboo, dthomas, jake, zahid, amy;
@@ -61,4 +56,4 @@ alter user jake default role vertex_read_only_view_role;
 alter user zahid default role vertex_read_only_view_role;
 alter user amy default role vertex_read_only_view_role;
 
-GRANT EXECUTE ON TRANSFORM FUNCTION group_concat(Varchar) to vertex_read_only_view_role,vertex;
+GRANT EXECUTE ON TRANSFORM FUNCTION group_concat(Varchar) to vertex_read_only_view_role;
