@@ -1,6 +1,16 @@
--- This script can be run by devpush on dev, push on prod, 
--- or the superuser on either
-set role role_admin_role;
+-- This script is to be run by the superuser on dev and prod
+-- create roles
+create role role_admin_role;
+--    verticanow_admin_role
+create role verticanow_admin_role;
+grant verticanow_admin_role to role_admin_role with admin option;
+--    vertex_read_only_view_role
+create role vertex_read_only_view_role;
+grant vertex_read_only_view_role to role_admin_role with admin option;
+
+-- initial role permissions
+-- the following permission allows users to rename schemas (verse publish needs this)
+grant create on database verticanow to verticanow_admin_role with grant option;
 
 -- vertex user and related schema
 create user vertex;

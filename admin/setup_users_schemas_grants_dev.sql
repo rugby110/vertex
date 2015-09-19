@@ -1,5 +1,13 @@
--- This script can be run by devpush or the superuser on dev
-set role role_admin_role;
+-- This script to be run by the superuser on dev
+
+--   devpush
+create user devpush;
+--alter user devpush identified by 'pwd'; --uncomment this with real pwd
+--grant authentication host_pass to devpush; --uncomment with the previous line
+grant role_admin_role to devpush;
+alter user devpush default role role_admin_role;
+create schema IF NOT EXISTS devpush AUTHORIZATION devpush; --only for testing
+alter user devpush search_path "$user", ods_kiva, verse, public; --change to vertex after testing
 
 -- tungsten_dev
 create user tungsten_dev;
