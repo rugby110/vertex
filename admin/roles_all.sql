@@ -4,10 +4,10 @@
 create role role_admin_role;
 --    verticanow_admin_role
 create role verticanow_admin_role;
-grant verticanow_admin_role to role_admin_role with grant option;
+grant verticanow_admin_role to role_admin_role with admin option;
 --    vertex_read_only_view_role
 create role vertex_read_only_view_role;
-grant vertex_read_only_view_role to role_admin_role with grant option;
+grant vertex_read_only_view_role to role_admin_role with admin option;
 
 -- initial role permissions
 -- the following permission allows users to rename schemas (verse publish needs this)
