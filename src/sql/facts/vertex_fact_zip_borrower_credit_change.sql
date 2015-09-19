@@ -1,0 +1,89 @@
+create or replace view vertex_fact_zip_borrower_credit_change as
+
+select bcc.id as zip_credit_change_id,
+  bcc.trans_id,
+  bcc.fund_account_id,
+  COALESCE(d_on_ref.amount, d_on_item.amount, rc_on_ref.amount, rc_on_item.amount, bcc.price) as local_price,
+  COALESCE(d_on_ref.amount_usd, d_on_item.amount_usd, rc_on_ref.amount_usd, rc_on_item.amount_usd, bcc.price) as usd_price,
+  bcc.price as cc_price,
+  dim_cct.credit_change_type_id,
+  bcc.create_time,
+	TO_CHAR(TO_TIMESTAMP(bcc.create_time), 'YYYYMMDD')::INT as create_day_id,
+  bcc.effective_time,
+	TO_CHAR(TO_TIMESTAMP(bcc.effective_time), 'YYYYMMDD')::INT as effective_day_id,
+  bcc.item_id,
+  bcc.ref_id,
+  fx.id as fx_rate_id,
+  bcc.changer_id,
+  case
+	  when bcc.changer_id = 0 then 'system'
+		when bcc.changer_id = bcc.fund_account_id then 'user'
+		else 'admin'
+	end as changer_type,
+  bcc.new_balance,
+  COALESCE(d_on_ref.currency, d_on_item.currency, rc_on_ref.currency, rc_on_item.currency, 'USD') as currency,
+  l.country_id as country_id,
+  case
+	  when fa.contract_entity_id is null then (select id from vertex_dim_accounting_category where accounting_category = 'self_directed')
+		else (select id from vertex_dim_accounting_category where accounting_category = 'managed_account')
+	end as accounting_category_id
+from verse.verse_ods_zip_credit_change bcc
+inner join verse.verse_ods_zip_fund_accounts fa on fa.id = bcc.fund_account_id
+inner join vertex_dim_credit_change_type dim_cct on dim_cct.credit_change_type_id = bcc.type_id and dim_cct.source_table_name = 'zip.credit_change'
+left join verse.verse_ods_zip_disbursal d_on_ref ON d_on_ref.id = bcc.ref_id AND dim_cct.ref_refers_to = 'disbursal'
+left join verse.verse_ods_zip_disbursal d_on_item ON d_on_item.id = bcc.item_id AND dim_cct.item_refers_to = 'disbursal'
+left join verse.verse_ods_zip_repayment_collected AS rc_on_ref ON rc_on_ref.id = bcc.ref_id AND dim_cct.ref_refers_to = 'repayment_collected'
+left join verse.verse_ods_zip_repayment_collected AS rc_on_item ON rc_on_item.id = bcc.item_id AND dim_cct.item_refers_to = 'repayment_collected'
+inner join verse.verse_ods_zip_loans l on l.id =
+case
+  when dim_cct.ref_refers_to = 'disbursal' then d_on_ref.loan_id
+  when dim_cct.item_refers_to = 'disbursal' then d_on_item.loan_id
+  when dim_cct.ref_refers_to = 'repayment_collected' then rc_on_ref.loan_id
+  when dim_cct.item_refers_to = 'repayment_collected' then rc_on_item.loan_id
+end
+left join verse.verse_ods_zip_fx_rates fx ON fx.id =
+case
+  when dim_cct.ref_refers_to = 'disbursal' then d_on_ref.fx_rate_id
+  when dim_cct.item_refers_to = 'disbursal' then d_on_item.fx_rate_id
+  when dim_cct.ref_refers_to = 'repayment_collected' then rc_on_ref.fx_rate_id
+  when dim_cct.item_refers_to = 'repayment_collected' then rc_on_item.fx_rate_id
+end
+where dim_cct.fx_rate_from in ('disbursal', 'repayment_collected')
+and fa.type = 'BorrowerFundAccount'
+UNION
+-- the following SQL gathers data for those credit change types where fx_rate_from is set to NULL even when ref_refers_to or
+-- item_refers_to references 'disbursal' or 'repayment_collected'
+select bcc.id as zip_credit_change_id,
+  bcc.trans_id,
+  bcc.fund_account_id,
+  bcc.price as local_price,
+  bcc.price as usd_price,
+  bcc.price as cc_price,
+  dim_cct.credit_change_type_id,
+  bcc.create_time,
+	TO_CHAR(TO_TIMESTAMP(bcc.create_time), 'YYYYMMDD')::INT as create_day_id,
+  bcc.effective_time,
+	TO_CHAR(TO_TIMESTAMP(bcc.effective_time), 'YYYYMMDD')::INT as effective_day_id,
+  bcc.item_id,
+  bcc.ref_id,
+  CAST(NULL AS INT) as fx_rate_id,
+  bcc.changer_id,
+  case
+	  when bcc.changer_id = 0 then 'system'
+		when bcc.changer_id = bcc.fund_account_id then 'user'
+		else 'admin'
+	end as changer_type,
+  bcc.new_balance,
+  'USD' as currency,
+  (select country_id from vertex_dim_country where name = 'United States') as country_id,
+  case
+	  when fa.contract_entity_id is null then (select id from vertex_dim_accounting_category where accounting_category = 'self_directed')
+		else (select id from vertex_dim_accounting_category where accounting_category = 'managed_account')
+	end as accounting_category_id
+from verse.verse_ods_zip_credit_change bcc
+inner join verse.verse_ods_zip_fund_accounts fa on fa.id = bcc.fund_account_id
+inner join vertex_dim_credit_change_type dim_cct on dim_cct.credit_change_type_id = bcc.type_id and dim_cct.source_table_name = 'zip.credit_change'
+where dim_cct.fx_rate_from is null
+and (dim_cct.ref_refers_to = 'disbursal' or dim_cct.ref_refers_to = 'repayment_collected' or dim_cct.item_refers_to = 'disbursal' or dim_cct.item_refers_to = 'repayment_collected')
+and fa.type = 'BorrowerFundAccount'
+;
