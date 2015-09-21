@@ -13,18 +13,16 @@ grant vertex_read_only_view_role to role_admin_role with admin option;
 grant create on database verticanow to verticanow_admin_role with grant option;
 
 -- vertex user and related schema
-create user vertex;
---alter user vertex identified by 'lpass:vertex_user_vertex:password';
---grant authentication host_pass to vertex; --uncomment with previous line
+--create user vertex identified by 'pwd'; -- uncomment, change pwd, and run this manually
+grant authentication host_pass to vertex;
 grant vertex_read_only_view_role to vertex;
 alter user vertex default role vertex_read_only_view_role;
 create schema IF NOT EXISTS vertex AUTHORIZATION vertex;
 create schema IF NOT EXISTS ods_kiva AUTHORIZATION vertex;
 
 -- verse user and related schema
-create user verse;
---alter user verse identified by 'lpass:vertex_user_verse:password';
---grant authentication host_pass to verse; --uncomment with previous line
+--create user verse identified by 'pwd'; -- uncomment, change pwd, and run this manually
+grant authentication host_pass to verse;
 grant verticanow_admin_role to verse; --for renaming schemas during verse publishing
 alter user verse default role verticanow_admin_role;
 create schema IF NOT EXISTS verse AUTHORIZATION verse;
