@@ -9,15 +9,15 @@ select lcc.id as zip_ledger_credit_change_id,
 			ELSE (select id from vertex_dim_accounting_category where accounting_category = 'managed_account')
 	END as accounting_category_id,
   COALESCE(lcc.fund_account_id, 0) as fund_account_id,
-  lcc.partner_id,
-  lcc.price,
+  COALESCE(lcc.partner_id, 0) as partner_id,
+  cast(lcc.price as numeric(36,2)) as price,
   'USD' as currency,
   lcc.effective_time,
 	TO_CHAR(TO_TIMESTAMP(lcc.effective_time), 'YYYYMMDD')::INT as effective_day_id,
-	lcc.ref_id,
+	COALESCE(lcc.ref_id, 0) as ref_id,
 	lcc.create_time,
 	TO_CHAR(TO_TIMESTAMP(lcc.create_time), 'YYYYMMDD')::INT as create_day_id,
-  lcc.creator_id,
+  COALESCE(lcc.creator_id, 0) as creator_id,
   NULL as fx_rate_id
 from verse.verse_ods_zip_ledger_credit_change lcc
 left join verse.verse_ods_zip_fund_accounts fa ON fa.id = lcc.fund_account_id
