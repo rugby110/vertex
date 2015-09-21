@@ -2,7 +2,7 @@ create or replace view vertex_fact_operations_credit_change as
 
 select id as operations_credit_change_id,
   admin_user_id,
-  price
+  price,
   create_time,
 	TO_CHAR(TO_TIMESTAMP(create_time), 'YYYYMMDD')::INT as create_day_id,
 	effective_time,

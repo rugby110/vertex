@@ -35,14 +35,16 @@ class FactOperationsCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCase 
 	}
 
 	public function testSample() {
-		$result = $this->db->query("select operations_credit_change_id, create_day_id, effective_day_id
+		$result = $this->db->query("select operations_credit_change_id,admin_user_id,price,create_time,create_day_id,
+			effective_time,effective_day_id,pp_txn_id
 			from $this->vertex_schema.vertex_fact_operations_credit_change
 			where operations_credit_change_id in (10567, 10678, 10789, 10904, 10342)
 			order by operations_credit_change_id");
 		$from_vertex = $result->fetchAll();
 
 
-		$result = $this->db->query("select operations_credit_change_id, create_day_id, effective_day_id
+		$result = $this->db->query("select operations_credit_change_id,admin_user_id,price,create_time,create_day_id,
+			effective_time,effective_day_id,pp_txn_id
 			from $this->reference_schema.verse_fact_operations_credit_change
 			where operations_credit_change_id in (10567, 10678, 10789, 10904, 10342)
 			order by operations_credit_change_id");
