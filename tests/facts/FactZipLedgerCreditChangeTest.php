@@ -49,14 +49,16 @@ class FactZipLedgerCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCase {
 	}
 
 	public function testSample() {
-		$result = $this->db->query("select zip_ledger_credit_change_id, create_day_id, effective_day_id
+		$result = $this->db->query("select fund_account_id,partner_id,
+			price,currency,effective_time,effective_day_id,ref_id,create_time,create_day_id,creator_id,fx_rate_id
 			from $this->vertex_schema.vertex_fact_zip_ledger_credit_change
 			where zip_ledger_credit_change_id in (567, 678, 789, 904, 342)
 			order by zip_ledger_credit_change_id");
 		$from_vertex = $result->fetchAll();
 
 
-		$result = $this->db->query("select zip_ledger_credit_change_id, create_day_id, effective_day_id
+		$result = $this->db->query("select fund_account_id,partner_id,
+			price,currency,effective_time,effective_day_id,ref_id,create_time,create_day_id,creator_id,fx_rate_id
 			from $this->reference_schema.verse_fact_zip_ledger_credit_change
 			where zip_ledger_credit_change_id in (567, 678, 789, 904, 342)
 			order by zip_ledger_credit_change_id");

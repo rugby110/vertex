@@ -35,16 +35,18 @@ class FactZipOperationsCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCa
 	}
 
 	public function testSample() {
-		$result = $this->db->query("select zip_operations_credit_change_id, create_day_id, effective_day_id
+		$result = $this->db->query("select zip_operations_credit_change_id,effective_time,effective_day_id,create_time,
+			create_day_id,price,currency,description,pp_txn_id,mpesa_receipt_no,admin_user_id,fx_rate_id
 			from $this->vertex_schema.vertex_fact_zip_operations_credit_change
-			where zip_operations_credit_change_id in (567, 678, 789, 904, 342)
+			where zip_operations_credit_change_id in (567, 678, 789, 904, 342, 46922)
 			order by zip_operations_credit_change_id");
 		$from_vertex = $result->fetchAll();
 
 
-		$result = $this->db->query("select zip_operations_credit_change_id, create_day_id, effective_day_id
+		$result = $this->db->query("select zip_operations_credit_change_id,effective_time,effective_day_id,create_time,
+			create_day_id,price,currency,description,pp_txn_id,mpesa_receipt_no,admin_user_id,fx_rate_id
 			from $this->reference_schema.verse_fact_zip_operations_credit_change
-			where zip_operations_credit_change_id in (567, 678, 789, 904, 342)
+			where zip_operations_credit_change_id in (567, 678, 789, 904, 342, 46922)
 			order by zip_operations_credit_change_id");
 		$from_dim = $result->fetchAll();
 
