@@ -1,5 +1,5 @@
 /**
-TODO:  move measures to vertex_fact_loan?
+TODO:  move measures to _vertex_fact_loan?
  */
 create or replace view vertex_dim_loan as
 
