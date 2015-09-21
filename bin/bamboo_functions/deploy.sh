@@ -7,6 +7,4 @@ function deploy () {
     echo "running ddl"
     run_ddl
   done
-  echo "running permissions"
-  run_permissions
 }
