@@ -95,7 +95,7 @@ create user looker;
 grant vertex_read_only_view_role to looker;
 alter user looker default role vertex_read_only_view_role;
 create schema IF NOT EXISTS looker AUTHORIZATION looker;
-alter user looker search_path "$user", ods_kiva, verse, public;
+alter user looker search_path "$user", vertex, ods_kiva, verse, public;
 
 -- testuser
 create user testuser;
