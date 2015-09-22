@@ -14,7 +14,7 @@
   },
   "autoload": {
       "psr-4": {
-          "Kiva\\Vertex\\":        "src/",
+          "Kiva\\Vertex\\":        "src/php/",
           "Kiva\\Vertex\\Testing\\": "tests/"
       }
   }
