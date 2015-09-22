@@ -4,9 +4,9 @@ select lcc.id as zip_ledger_credit_change_id,
   dim_cct.credit_change_type_id,
   CASE
       WHEN lcc.fund_account_id IS NULL THEN 0
-			WHEN fa.contract_entity_id IS NULL THEN (select id from vertex_dim_accounting_category where accounting_category = 'self_directed')
-			WHEN fa.contract_entity_id = 1 THEN (select id from vertex_dim_accounting_category where accounting_category = 'kmf')
-			ELSE (select id from vertex_dim_accounting_category where accounting_category = 'managed_account')
+			WHEN fa.contract_entity_id IS NULL THEN (select dim_ac1.id from vertex_dim_accounting_category dim_ac1 where dim_ac1.accounting_category = 'self_directed')
+			WHEN fa.contract_entity_id = 1 THEN (select dim_ac2.id from vertex_dim_accounting_category dim_ac2 where dim_ac2.accounting_category = 'kmf')
+			ELSE (select dim_ac3.id from vertex_dim_accounting_category dim_ac3 where dim_ac3.accounting_category = 'managed_account')
 	END as accounting_category_id,
   COALESCE(lcc.fund_account_id, 0) as fund_account_id,
   COALESCE(lcc.partner_id, 0) as partner_id,
