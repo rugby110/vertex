@@ -3,6 +3,8 @@ create or replace view vertex_fact_zip_borrower_credit_change as
 select bcc.id as zip_credit_change_id,
   COALESCE(bcc.trans_id,0) as trans_id,
   bcc.fund_account_id,
+  -- we try to capture the local and USD amounts from the disbursal or repayment_collected references in item_id or
+  -- ref_id and round it to 2 decimal places since it is a currency amount
   cast(COALESCE(d_on_ref.amount, d_on_item.amount, rc_on_ref.amount, rc_on_item.amount, bcc.price) as numeric(36,2)) as local_price,
   cast(COALESCE(d_on_ref.amount_usd, d_on_item.amount_usd, rc_on_ref.amount_usd, rc_on_item.amount_usd, bcc.price) as numeric(36,2)) as usd_price,
   dim_cct.credit_change_type_id,
@@ -20,6 +22,8 @@ select bcc.id as zip_credit_change_id,
 		else 'admin'
 	end as changer_type,
 	cast(bcc.new_balance as numeric(36,2)) as new_balance,
+	-- we try to capture the currency from the disbursal or repayment_collected references in item_id or ref_id, with a
+	-- default value of USD
   COALESCE(d_on_ref.currency, d_on_item.currency, rc_on_ref.currency, rc_on_item.currency, 'USD') as currency,
   l.country_id,
   case
@@ -33,6 +37,7 @@ left join verse.verse_ods_zip_disbursal d_on_ref ON d_on_ref.id = bcc.ref_id AND
 left join verse.verse_ods_zip_disbursal d_on_item ON d_on_item.id = bcc.item_id AND dim_cct.item_refers_to = 'disbursal' AND dim_cct.fx_rate_from = 'disbursal'
 left join verse.verse_ods_zip_repayment_collected AS rc_on_ref ON rc_on_ref.id = bcc.ref_id AND dim_cct.ref_refers_to = 'repayment_collected' AND dim_cct.fx_rate_from = 'repayment_collected'
 left join verse.verse_ods_zip_repayment_collected AS rc_on_item ON rc_on_item.id = bcc.item_id AND dim_cct.item_refers_to = 'repayment_collected' AND dim_cct.fx_rate_from = 'repayment_collected'
+-- loan_id can come from either disbursal or repayment_collected
 left join verse.verse_ods_zip_loans l on l.id =
 case
   when dim_cct.ref_refers_to = 'disbursal' then d_on_ref.loan_id
@@ -40,6 +45,7 @@ case
   when dim_cct.ref_refers_to = 'repayment_collected' then rc_on_ref.loan_id
   when dim_cct.item_refers_to = 'repayment_collected' then rc_on_item.loan_id
 end
+-- same for fx_rate_id
 left join verse.verse_ods_zip_fx_rates fx ON fx.id =
 case
   when dim_cct.ref_refers_to = 'disbursal' then d_on_ref.fx_rate_id
