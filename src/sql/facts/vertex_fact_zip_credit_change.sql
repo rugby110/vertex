@@ -20,9 +20,9 @@ select cc.id as zip_credit_change_id,
   cast(cc.new_balance as numeric(36,2)) as new_balance, ----this is a currency amount, so making it only 2 decimal places.
   cc.currency,
   case
-	  when fa.contract_entity_id IS NULL then (select id from vertex_dim_accounting_category where accounting_category = 'self_directed')
-	  when fa.contract_entity_id = 1 then (select id from vertex_dim_accounting_category where accounting_category = 'kmf')
-		else (select id from vertex_dim_accounting_category where accounting_category = 'managed_account')
+	  when fa.contract_entity_id IS NULL then (select accounting_category_id from vertex_dim_accounting_category where accounting_category = 'self_directed')
+	  when fa.contract_entity_id = 1 then (select accounting_category_id from vertex_dim_accounting_category where accounting_category = 'kmf')
+		else (select accounting_category_id from vertex_dim_accounting_category where accounting_category = 'managed_account')
 	end as accounting_category_id,
   NULL as fx_rate_id
 from verse.verse_ods_zip_credit_change cc
