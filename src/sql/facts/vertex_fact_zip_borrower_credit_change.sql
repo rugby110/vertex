@@ -27,8 +27,8 @@ select bcc.id as zip_credit_change_id,
   COALESCE(d_on_ref.currency, d_on_item.currency, rc_on_ref.currency, rc_on_item.currency, 'USD') as currency,
   l.country_id,
   case
-	  when fa.contract_entity_id is null then (select id from vertex_dim_accounting_category where accounting_category = 'self_directed')
-		else (select id from vertex_dim_accounting_category where accounting_category = 'managed_account')
+	  when fa.contract_entity_id is null then (select accounting_category_id from vertex_dim_accounting_category where accounting_category = 'self_directed')
+		else (select accounting_category_id from vertex_dim_accounting_category where accounting_category = 'managed_account')
 	end as accounting_category_id
 from verse.verse_ods_zip_credit_change bcc
 inner join verse.verse_ods_zip_fund_accounts fa on fa.id = bcc.fund_account_id
