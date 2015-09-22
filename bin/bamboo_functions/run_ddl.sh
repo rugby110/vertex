@@ -13,7 +13,7 @@ function run_ddl () {
       echo "Skipping '$sql_file' with VERTEX_NO_DEPLOY tag"
     else
       echo "Deploying file '$sql_file'"
-      php ${base_dir}/src/php/admin/SqlRunner.php $sql_file
+      php ${base_dir}/src/php/Admin/SqlRunner.php $sql_file
     fi
   done
 }
