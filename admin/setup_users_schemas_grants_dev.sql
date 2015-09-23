@@ -5,8 +5,7 @@
 grant authentication host_pass to devpush;
 grant role_admin_role to devpush;
 alter user devpush default role role_admin_role;
-create schema IF NOT EXISTS devpush AUTHORIZATION devpush; --only for testing
-alter user devpush search_path "$user", vertex, ods_kiva, verse, public;
+alter user devpush search_path vertex, ods_kiva, verse, public;
 
 -- tungsten_dev
 --create user tungsten_dev identified by 'pwd'; -- uncomment, change pwd, and run this manually
@@ -85,12 +84,4 @@ grant vertex_read_only_view_role to bamboo;
 alter user bamboo default role vertex_read_only_view_role;
 create schema IF NOT EXISTS bamboo AUTHORIZATION bamboo;
 alter user bamboo search_path "$user", ods_kiva, verse, public;
-
--- testuser
---create user testuser identified by 'pwd'; -- uncomment, change pwd, and run this manually
-grant authentication host_pass to testuser;
-grant vertex_read_only_view_role to testuser;
-alter user testuser default role vertex_read_only_view_role;
-create schema IF NOT EXISTS testuser AUTHORIZATION testuser;
-alter user testuser search_path "$user", ods_kiva, verse, public;
 
