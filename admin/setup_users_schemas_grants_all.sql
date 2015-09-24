@@ -4,12 +4,12 @@ create role role_admin_role;
 --    verticanow_admin_role
 create role verticanow_admin_role;
 grant verticanow_admin_role to role_admin_role with admin option;
+--    vertex_admin_role
+create role vertex_admin_role;
+grant vertex_admin_role to verticanow_admin_role with admin option;
 --    vertex_read_only_view_role
 create role vertex_read_only_view_role;
 grant vertex_read_only_view_role to role_admin_role with admin option;
---    vertex_admin_role
-create role vertex_admin_role;
-grant vertex_admin_role to role_admin_role with admin option;
 
 -- initial role permissions
 -- the following permission allows users to rename schemas (verse publish needs this)
@@ -18,8 +18,8 @@ grant create on database verticanow to verticanow_admin_role with grant option;
 -- vertex user and related schema
 --create user vertex identified by 'pwd'; -- uncomment, change pwd, and run this manually
 grant authentication host_pass to vertex;
-grant vertex_read_only_view_role to vertex;
-alter user vertex default role vertex_read_only_view_role;
+grant vertex_admin_view_role to vertex;
+alter user vertex default role vertex_admin_role;
 create schema IF NOT EXISTS vertex AUTHORIZATION vertex;
 create schema IF NOT EXISTS ods_kiva AUTHORIZATION vertex;
 
@@ -34,7 +34,11 @@ create schema IF NOT EXISTS verse_live AUTHORIZATION verse;
 
 -- grants for the vertex_admin_role
 grant all on schema vertex to vertex_admin_role;
-grant all on all tables in schema vertex to vertex_admin_role;
+grant all on all tables in schema vertex to vertex_admin_role with grant option;
+grant all on schema ods_kiva to vertex_admin_role;
+grant all on all tables in schema vertex to vertex_admin_role with grant option;
+grant all on schema vertex to vertex_admin_role;
+grant all on all tables in schema vertex to vertex_admin_role with grant option;
 
 -- grants for the vertex_read_only_view_role
 grant usage on schema ods_kiva to vertex_read_only_view_role;

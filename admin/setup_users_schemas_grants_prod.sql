@@ -6,6 +6,9 @@ grant authentication host_pass to push;
 grant role_admin_role to push;
 alter user push default role role_admin_role;
 alter user push search_path vertex, ods_kiva, verse, public;
+grant all on all tables in schema vertex to push with grant option;
+grant all on all tables in schema ods_kiva to push with grant option;
+grant all on all tables in schema verse to push with grant option;
 
 -- tungsten
 --create user tungsten identified by 'pwd'; -- uncomment, change pwd, and run this manually

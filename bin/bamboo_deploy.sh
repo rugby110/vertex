@@ -74,7 +74,7 @@ pre_deploy
 
 bamboo_stage="DEPLOYMENT STAGE: deploy"
 echo $bamboo_stage
-deploy
+deploy -e "$deployment_environment"
 
 bamboo_stage="DEPLOYMENT STAGE: post-deploy"
 echo $bamboo_stage

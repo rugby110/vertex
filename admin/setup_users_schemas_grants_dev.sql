@@ -6,6 +6,9 @@ grant authentication host_pass to devpush;
 grant role_admin_role to devpush;
 alter user devpush default role role_admin_role;
 alter user devpush search_path vertex, ods_kiva, verse, public;
+grant all on all tables in schema vertex to devpush with grant option;
+grant all on all tables in schema ods_kiva to devpush with grant option;
+grant all on all tables in schema verse to devpush with grant option;
 
 -- tungsten_dev
 --create user tungsten_dev identified by 'pwd'; -- uncomment, change pwd, and run this manually
