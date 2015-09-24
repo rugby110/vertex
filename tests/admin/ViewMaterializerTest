@@ -57,5 +57,11 @@ class ViewMaterializerTest extends Kiva\Vertex\Testing\VertexTestCase {
 
 		// assert that data in materialized view matches original view
 		$this->assertSame($original_view_data, $materialized_view_data);
+
+		$drop_sql = "drop table if exists $table_name;";
+		$this->db->exec($drop_sql);
+
+		$drop_sql = "drop table if exists $view_name;";
+		$this->db->exec($drop_sql);
 	}
 }
