@@ -1,0 +1,67 @@
+<?php
+
+use Kiva\Vertex\Admin\ViewMaterializer;
+
+class ViewMaterializerTest extends Kiva\Vertex\Testing\VertexTestCase {
+	public function testMaterialize() {
+		// create a table
+		$table_name = "the_table";
+		$drop_sql = "drop table if exists $table_name;";
+		$this->db->exec($drop_sql);
+
+		$create_table_sql =
+		"create table $table_name (
+		        id    		integer not null,
+		        name  		varchar(40),
+		        some_value 	integer
+		);";
+
+		$this->db->exec($create_table_sql);
+
+		$insert_sql =
+				"insert into $table_name values(1, 'one', 10);
+				insert into $table_name values(2, 'two', 20);";
+
+		$this->db->exec($insert_sql);
+
+		// create a view on the table
+		$view_name = "the_table_view";
+		$create_view_sql =
+				"create or replace view $view_name as
+				select id, name, some_value * 3
+				from $table_name;";
+
+		$this->db->exec($create_view_sql);
+
+		// select data from view
+		$result = $this->db->query("select * from $view_name;");
+		$original_view_data = $result->fetchAll();
+
+		// materialize view
+		$view_materializer = new ViewMaterializer($this->db);
+		$view_materializer->materialize($view_name);
+
+		// assert that the view doesn't exist
+		$view_check_sql = "select count(*)
+		from v_catalog.views
+		where table_name = '" . $view_name . "'";
+
+		$result = $this->db->query($view_check_sql);
+		$view_count = $result->fetchColumn();
+		// assert that the view no longer exists
+		$this->assertEquals(0, $view_count);
+
+		// select from the materialized view table
+		$result = $this->db->query("select * from $view_name;");
+		$materialized_view_data = $result->fetchAll();
+
+		// assert that data in materialized view matches original view
+		$this->assertSame($original_view_data, $materialized_view_data);
+
+		$drop_sql = "drop table if exists $table_name;";
+		$this->db->exec($drop_sql);
+
+		$drop_sql = "drop table if exists $view_name;";
+		$this->db->exec($drop_sql);
+	}
+}
