@@ -36,18 +36,19 @@ class FactOperationsCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCase 
 
 	public function testSample() {
 		$result = $this->db->query("select operations_credit_change_id,admin_user_id,price,create_time,create_day_id,
-			effective_time,effective_day_id,pp_txn_id
+			effective_time,effective_day_id,credit_change_type_id,pp_txn_id
 			from $this->vertex_schema.vertex_fact_operations_credit_change
 			where operations_credit_change_id in (10567, 10678, 10789, 10904, 10342)
 			order by operations_credit_change_id");
 		$from_vertex = $result->fetchAll();
 
 
-		$result = $this->db->query("select operations_credit_change_id,admin_user_id,price,create_time,create_day_id,
-			effective_time,effective_day_id,pp_txn_id
-			from $this->reference_schema.verse_fact_operations_credit_change
-			where operations_credit_change_id in (10567, 10678, 10789, 10904, 10342)
-			order by operations_credit_change_id");
+		$result = $this->db->query("select occ.operations_credit_change_id,occ.admin_user_id,occ.price,occ.create_time,occ.create_day_id,
+			occ.effective_time,occ.effective_day_id,cct.credit_change_type_id,occ.pp_txn_id
+			from $this->reference_schema.verse_fact_operations_credit_change occ
+			left join $this->reference_schema.verse_dim_credit_change_type cct on occ.dim_credit_change_type_id = cct.v_id and cct.v_current = true
+			where occ.operations_credit_change_id in (10567, 10678, 10789, 10904, 10342)
+			order by occ.operations_credit_change_id");
 		$from_dim = $result->fetchAll();
 
 		$this->assertSame($from_dim,$from_vertex);

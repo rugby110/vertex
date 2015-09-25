@@ -35,17 +35,20 @@ class FactPartnerCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCase {
 	}
 
 	public function testSample() {
-		$result = $this->db->query("select partner_credit_change_id,price,ref_id,admin_user_id,create_time,
-			create_day_id,effective_time,effective_day_id,statement_id
+		$result = $this->db->query("select partner_credit_change_id,partner_id,price, ref_id,admin_user_id,create_time,
+			create_day_id,effective_time,effective_day_id,statement_id,credit_change_type_id
 			from $this->vertex_schema.vertex_fact_partner_credit_change
 			where partner_credit_change_id in (12,35,22242,48804,93519,103801,382658,407193,1404138,1567711)
 			order by partner_credit_change_id");
 		$from_vertex = $result->fetchAll();
 
 
-		$result = $this->db->query("select partner_credit_change_id,price,ref_id,admin_user_id,create_time,
-			create_day_id,effective_time,effective_day_id,statement_id
-			from $this->reference_schema.verse_fact_partner_credit_change
+		$result = $this->db->query("select pcc.partner_credit_change_id,dim_p.partner_id,pcc.price,pcc.ref_id,pcc.admin_user_id,
+			pcc.create_time,pcc.create_day_id,pcc.effective_time,pcc.effective_day_id,pcc.statement_id,
+			cct.credit_change_type_id
+			from $this->reference_schema.verse_fact_partner_credit_change pcc
+			inner join $this->reference_schema.verse_dim_credit_change_type cct on pcc.dim_credit_change_type_id = cct.v_id and cct.v_current = true
+			inner join $this->reference_schema.verse_dim_partner dim_p on dim_p.v_id = pcc.dim_partner_id
 			where partner_credit_change_id in (12,35,22242,48804,93519,103801,382658,407193,1404138,1567711)
 			order by partner_credit_change_id");
 		$from_dim = $result->fetchAll();

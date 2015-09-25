@@ -44,14 +44,20 @@ class FactCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCase {
 	}
 
 	public function testSample() {
-		$result = $this->db->query("select credit_change_id, trans_id, changer_id, changer_type, effective_day_id, user_account_type
+		$result = $this->db->query("select credit_change_id,trans_id,fund_account_id,changer_id,changer_type,credit_change_type_id,
+			price,create_time,create_day_id,effective_time,effective_day_id,item_id,ref_id,new_balance,user_account_type,
+			accounting_category_id
 			from $this->vertex_schema.vertex_fact_credit_change
 			where credit_change_id in (94036216, 58567425, 44838499, 128920733, 60443118, 105222111, 144529686, 162360930, 132458036, 183434305)
 			order by credit_change_id");
 		$from_vertex = $result->fetchAll();
 
-		$result = $this->db->query("select credit_change_id, trans_id, changer_id, changer_type, effective_day_id, user_account_type
-			from $this->reference_schema.verse_fact_credit_change
+		$result = $this->db->query("select cc.credit_change_id,cc.trans_id,cc.fund_account_id,cc.changer_id,cc.changer_type,
+			cct.credit_change_type_id,cc.price,cc.create_time,cc.create_day_id,cc.effective_time,cc.effective_day_id,
+			cc.item_id,cc.ref_id,cc.new_balance,cc.user_account_type,ac.v_id as accounting_category_id
+			from $this->reference_schema.verse_fact_credit_change cc
+			left join $this->reference_schema.verse_dim_credit_change_type cct on cc.dim_credit_change_type_id = cct.v_id and cct.v_current = true
+			left join $this->reference_schema.verse_dim_accounting_category ac on cc.dim_accounting_category_id = ac.v_id and ac.v_current = true
 			where credit_change_id in (94036216, 58567425, 44838499, 128920733, 60443118, 105222111, 144529686, 162360930, 132458036, 183434305)
 			order by credit_change_id");
 		$from_dim = $result->fetchAll();

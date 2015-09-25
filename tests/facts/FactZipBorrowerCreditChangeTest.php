@@ -51,17 +51,20 @@ class FactZipBorrowerCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCase
 	public function testSample() {
 		$result = $this->db->query("select zip_credit_change_id,trans_id,fund_account_id,local_price,usd_price,
  	 		create_time,create_day_id,effective_time,effective_day_id,item_id,ref_id,fx_rate_id,
-  			changer_id,changer_type,new_balance,currency,country_id
+  			changer_id,changer_type,new_balance,currency,country_id,credit_change_type_id,accounting_category_id
 			from $this->vertex_schema.vertex_fact_zip_borrower_credit_change
 			where zip_credit_change_id in (930,935,936,939,1286,1288,1525,1526,1714,2103)
 			order by zip_credit_change_id");
 		$from_vertex = $result->fetchAll();
 
 
-		$result = $this->db->query("select zip_credit_change_id,trans_id,fund_account_id,local_price,usd_price,
- 			create_time,create_day_id,effective_time,effective_day_id,item_id,ref_id,fx_rate_id,
- 			changer_id,changer_type,new_balance,currency,country_id
-			from $this->reference_schema.verse_fact_zip_borrower_credit_change
+		$result = $this->db->query("select bcc.zip_credit_change_id,bcc.trans_id,bcc.fund_account_id,bcc.local_price,
+			bcc.usd_price,bcc.create_time,bcc.create_day_id,bcc.effective_time,bcc.effective_day_id,bcc.item_id,bcc.ref_id,
+			bcc.fx_rate_id,bcc.changer_id,bcc.changer_type,bcc.new_balance,bcc.currency,bcc.country_id,
+			cct.credit_change_type_id,ac.v_id as accounting_category_id
+			from $this->reference_schema.verse_fact_zip_borrower_credit_change bcc
+			left join $this->reference_schema.verse_dim_credit_change_type cct on bcc.dim_credit_change_type_id = cct.v_id and cct.v_current = true
+			left join $this->reference_schema.verse_dim_accounting_category ac on bcc.dim_accounting_category_id = ac.v_id and ac.v_current = true
 			where zip_credit_change_id in (930,935,936,939,1286,1288,1525,1526,1714,2103)
 			order by zip_credit_change_id");
 		$from_dim = $result->fetchAll();

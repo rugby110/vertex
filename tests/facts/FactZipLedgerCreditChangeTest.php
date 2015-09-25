@@ -50,16 +50,20 @@ class FactZipLedgerCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCase {
 
 	public function testSample() {
 		$result = $this->db->query("select fund_account_id,partner_id,
-			price,currency,effective_time,effective_day_id,ref_id,create_time,create_day_id,creator_id,fx_rate_id
+			price,currency,effective_time,effective_day_id,ref_id,create_time,create_day_id,creator_id,fx_rate_id,
+			credit_change_type_id, accounting_category_id
 			from $this->vertex_schema.vertex_fact_zip_ledger_credit_change
 			where zip_ledger_credit_change_id in (567, 678, 789, 904, 342)
 			order by zip_ledger_credit_change_id");
 		$from_vertex = $result->fetchAll();
 
 
-		$result = $this->db->query("select fund_account_id,partner_id,
-			price,currency,effective_time,effective_day_id,ref_id,create_time,create_day_id,creator_id,fx_rate_id
-			from $this->reference_schema.verse_fact_zip_ledger_credit_change
+		$result = $this->db->query("select lcc.fund_account_id,lcc.partner_id,
+			lcc.price,lcc.currency,lcc.effective_time,lcc.effective_day_id,lcc.ref_id,lcc.create_time,lcc.create_day_id,
+			lcc.creator_id,lcc.fx_rate_id,cct.credit_change_type_id,ac.v_id as accounting_category_id
+			from $this->reference_schema.verse_fact_zip_ledger_credit_change lcc
+			left join $this->reference_schema.verse_dim_credit_change_type cct on lcc.dim_credit_change_type_id = cct.v_id and cct.v_current = true
+			left join $this->reference_schema.verse_dim_accounting_category ac on lcc.dim_accounting_category_id = ac.v_id and ac.v_current = true
 			where zip_ledger_credit_change_id in (567, 678, 789, 904, 342)
 			order by zip_ledger_credit_change_id");
 		$from_dim = $result->fetchAll();
