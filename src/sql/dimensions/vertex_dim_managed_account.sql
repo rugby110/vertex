@@ -8,7 +8,6 @@ select TO_CHAR(ma.fund_account_id) || TO_CHAR('_') || COALESCE(TO_CHAR(pf.id), '
 			TO_CHAR(p.firstName) || TO_CHAR(' ') || TO_CHAR(p.lastName) as account_manager_name,
 			ma.management_type as management_type,
 			ce.src_of_funds_id as src_of_funds_id,
-			fa.user_account_type_id as user_account_type_id,
 			fa.accounting_category,
 			fa.accounting_category_id,
 			pf.id as promo_fund_id,

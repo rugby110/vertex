@@ -51,7 +51,6 @@ select
 		end as user_type    /* logic copied from fact_donation_accounts, should probably verify when fact_donation_accounts is deployed */
 	, abs(cc.price) as amount /* in the verse, there are no negative amts.  all original amts are negative, all are flipped. */
 	, cc.item_id
-	, cc.user_account_type
 	, cc.trans_id as transaction_id
 	/*, false as is_modification*/
 	, cc.credit_change_type_id

@@ -35,7 +35,7 @@ class FactLedgerCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCase {
 	}
 
 	public function testSample() {
-		$result = $this->db->query("select ledger_credit_change_id,fund_account_id,user_account_type,partner_id,price,
+		$result = $this->db->query("select ledger_credit_change_id,fund_account_id,partner_id,price,
 			create_time,create_day_id,effective_time,effective_day_id,creator_id,ref_id,credit_change_type_id,
 			accounting_category_id
 			from $this->vertex_schema.vertex_fact_ledger_credit_change
@@ -44,7 +44,7 @@ class FactLedgerCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCase {
 		$from_vertex = $result->fetchAll();
 
 
-		$result = $this->db->query("select lcc.ledger_credit_change_id,lcc.fund_account_id,lcc.user_account_type,p.partner_id,
+		$result = $this->db->query("select lcc.ledger_credit_change_id,lcc.fund_account_id,p.partner_id,
 			lcc.price,lcc.create_time,lcc.create_day_id,lcc.effective_time,lcc.effective_day_id,lcc.creator_id,lcc.ref_id,
 			cct.credit_change_type_id,ac.v_id as accounting_category_id
 			from $this->reference_schema.verse_fact_ledger_credit_change lcc

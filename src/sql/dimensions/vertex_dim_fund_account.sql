@@ -3,8 +3,6 @@ create or replace view vertex_dim_fund_account as
 select faa.owner_login_id,
 	faa.fund_account_id,
 	faa.fund_account_type_id,
-	faa.user_account_type_id, -- The user_account_type_id is selected again for naming convention, to help with dimension column. This actually higlight poor name in KIVA db as well. user_account_type should really be user_account_type_id
-	faa.user_account_type,
 	faa.source_of_funds,
 	faa.accounting_category,
 	faa.accounting_category_id,

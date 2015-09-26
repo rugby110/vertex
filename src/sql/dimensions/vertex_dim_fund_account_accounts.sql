@@ -2,8 +2,6 @@ create or replace view vertex_dim_fund_account_accounts as
 
 select lfam.login_id as owner_login_id,
 	fa.id as fund_account_id,
-	uat.id as user_account_type_id, -- The user_account_type_id is selected again for naming convention, to help with dimension column. This actually higlight poor name in KIVA db as well. user_account_type should really be user_account_type_id
-	uat.name as user_account_type,
 	src_fund.name as source_of_funds,
 	fa.accounting_category,
 	dac.accounting_category_id,
@@ -29,7 +27,6 @@ select lfam.login_id as owner_login_id,
 from fund_account fa
 inner join login_fund_account_mapper lfam on fa.id = lfam.fund_account_id
 inner join vertex_dim_accounting_category dac on dac.accounting_category = fa.accounting_category
-left join user_account_type uat on fa.user_account_type = uat.id
 left join source_of_funds src_fund on fa.source_of_funds = src_fund.id
 left join contact_info contact_info on contact_info.id=fa.billing_contact_id
 left join geo_state_codes geo_state_codes on geo_state_codes.postal_code = contact_info.state and contact_info.country_id = 227

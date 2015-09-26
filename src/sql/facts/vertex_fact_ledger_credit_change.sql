@@ -2,7 +2,6 @@ create or replace view vertex_fact_ledger_credit_change as
 
 select id as ledger_credit_change_id,
   COALESCE(lcc.fund_account_id, 0) as fund_account_id,
-	COALESCE(fa.user_account_type_id, '0') as user_account_type,
 	COALESCE(lcc.partner_id,'0') as partner_id,
 	price,
 	lcc.create_time,

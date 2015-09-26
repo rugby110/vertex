@@ -49,7 +49,6 @@ select
 	cc.item_id,
 	cc.ref_id,
 	cc.new_balance,
-	fa.user_account_type, 
 	dfa.accounting_category_id
 from
         credit_change cc

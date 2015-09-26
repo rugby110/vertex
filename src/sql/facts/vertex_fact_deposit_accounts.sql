@@ -45,7 +45,6 @@ select  cc.credit_change_id,
 	cc.item_id,
 	cc.trans_id as transaction_id,
 	mref.referrer_id,
-	cc.user_account_type,
 	cc.accounting_category_id,
 	cc.credit_change_type_id,
 	case when cc.credit_change_type_id in (select credit_change_type_id from check_types)
