@@ -49,12 +49,14 @@ select
 	cc.item_id,
 	cc.ref_id,
 	cc.new_balance,
-	dfa.accounting_category_id
+	dfa.accounting_category_id,
+	ccd.descripion
 from
         credit_change cc
 left join fund_account fa on fa.id = fund_account_id
 left join transaction trans on trans.id = cc.trans_id
 left join vertex_dim_fund_account_accounts dfa on fa.id = dfa.fund_account_id
+left join credit_change_description ccd on ccd.cc_id = cc.id
 inner join vertex_dim_credit_change_type dcct on dcct.credit_change_type_id = 
 	case
 	       when cc.type_id=23 -- loan_purchase 

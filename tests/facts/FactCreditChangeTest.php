@@ -52,6 +52,15 @@ class FactCreditChangeTest extends Kiva\Vertex\Testing\VertexTestCase {
 
 		$this->assertSame($from_dim,$from_vertex);
 	}
+
+	public function testDescriptions() {
+		$result = $this->db->query("select count(distinct description)
+			from $this->vertex_schema.vertex_fact_credit_change");
+		$count = $result->fetchColumn();
+
+		//the kiva db has 170000+.  Lets just make sure that we're pulling in at least this many.
+		$this->assertGreaterThan(170000,$count);
+	}
 }
 
 
