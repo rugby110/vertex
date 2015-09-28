@@ -1,13 +1,13 @@
 create or replace view vertex_fact_promo_impact_accounts as
 
 select  llp.lender_fund_account_id as acquired_fund_account_id, lfam.login_id as acquired_login_id, ma.fund_account_id as managed_account_id, ma.management_type as promo_type,
-  min(llp.purchase_time) as acquired_time, TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD') as acquired_day_id,
+  min(llp.purchase_time) as acquired_time, TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD')::INT as acquired_day_id,
   sum(llp.purchase_amt) as promo_amt_required,
-  case when fa.cc_all_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_user,
-  case when fa.loan_purchase_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_lender,
-  case when fa.deposit_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_depositor,
-  case when fa.donation_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_donor,
-  case when fa.gift_purchase_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_card_purchaser
+  case when fa.cc_all_first_day_id < TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD')::INT then 1 else 0 end as is_existing_user,
+  case when fa.loan_purchase_first_day_id < TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD')::INT then 1 else 0 end as is_existing_lender,
+  case when fa.deposit_first_day_id < TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD')::INT then 1 else 0 end as is_existing_depositor,
+  case when fa.donation_first_day_id < TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD')::INT then 1 else 0 end as is_existing_donor,
+  case when fa.gift_purchase_first_day_id < TO_CHAR(TO_TIMESTAMP(min(llp.purchase_time)),'YYYYMMDD')::INT then 1 else 0 end as is_existing_card_purchaser
 from lender_loan_purchase llp
 inner join vertex_dim_managed_account ma on llp.repayment_fund_account_id = ma.fund_account_id
 inner join vertex_dim_fund_account fa on fa.fund_account_id=llp.lender_fund_account_id --and fa.v_current
@@ -19,13 +19,13 @@ group by llp.lender_fund_account_id, lfam.login_id, ma.fund_account_id, ma.manag
 union
 
 select lfam.fund_account_id as acquired_fund_account_id, i.invitee_id as acquired_login_id, pf.fund_account_id as managed_account_id, 'bonus' as promo_type,
- min(lpci.date_confirmed) as acquired_time, TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD') as acquired_day_id,
+ min(lpci.date_confirmed) as acquired_time, TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD')::INT as acquired_day_id,
  sum(lpci.amount_at_creation - lpci.amount_unredeemed) as promo_amt_required,
- case when fa.cc_all_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_user, /* from invitee */
- case when fa.loan_purchase_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_lender,
- case when fa.deposit_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_depositor,
- case when fa.donation_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_donor,
- case when fa.gift_purchase_first_day_id < TO_NUMBER(TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD'),'99999999') then 1 else 0 end as is_existing_card_purchaser
+ case when fa.cc_all_first_day_id < TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD')::INT then 1 else 0 end as is_existing_user, /* from invitee */
+ case when fa.loan_purchase_first_day_id < TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD')::INT then 1 else 0 end as is_existing_lender,
+ case when fa.deposit_first_day_id < TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD')::INT then 1 else 0 end as is_existing_depositor,
+ case when fa.donation_first_day_id < TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD')::INT then 1 else 0 end as is_existing_donor,
+ case when fa.gift_purchase_first_day_id < TO_CHAR(TO_TIMESTAMP(min(lpci.date_confirmed)),'YYYYMMDD')::INT then 1 else 0 end as is_existing_card_purchaser
 from invitation i
 inner join lender_promo_credit lpc on i.inviter_id = lpc.lender_account_id and i.created_as_type = 'invite' and i.id = lpc.ref_id
 inner join promo_fund pf on pf.id = lpc.promo_fund_id and lpc.award_type = 'invitation' and lpc.amount_at_creation-lpc.amount_unredeemed > 0
