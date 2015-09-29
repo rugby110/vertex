@@ -50,7 +50,7 @@ select
 	cc.ref_id,
 	cc.new_balance,
 	dfa.accounting_category_id,
-	ccd.descripion
+	ccd.description
 from
         credit_change cc
 left join fund_account fa on fa.id = fund_account_id
