@@ -37,6 +37,15 @@ class Node
 		return $nodes;
 	}
 
+	public function printNodeAndDependencies($indent="")
+	{
+		print($indent . $this->getName() . "\n");
+		$indent = $indent . "   ";
+		foreach ($this->edges as $edge) {
+			$edge->printNodeAndDependencies($indent);
+		}
+	}
+
 	public function resolveDependencies($node, &$resolved, &$unresolved)
 	{
 		$unresolved[$node->getName()] = $node;
