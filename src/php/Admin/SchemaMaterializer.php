@@ -4,16 +4,19 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use Kiva\Vertex\Admin\Node;
 use Kiva\Vertex\Admin\DependencyFinder;
+use Kiva\Vertex\Admin\ViewMaterializer;
 
 class SchemaMaterializer {
 	protected $user;
 	protected $pwd;
 	protected $db;
+	protected $destination_schema;
 	protected $odbc_dsn;
 
 	public function __construct() {
 		$this->user = getenv("vertex_vertica_user");
 		$this->pwd = getenv("vertex_vertica_password");
+		$this->destination_schema = getenv("vertex_vertica_vertex_schema");
 		$this->odbc_dsn = getenv("vertex_vertica_odbc_dsn");
 
 		try {
@@ -24,9 +27,9 @@ class SchemaMaterializer {
 		}
 	}
 
-	public function run($schema_name) {
+	public function run($source_schema) {
 
-		exec("vsql -c \"select table_name, view_definition from v_catalog.views where table_name like 'vertex_%' and table_schema='van';\" -A -t 2>&1",$outputAndErrors,$return_value);
+		exec("vsql -c \"select table_name, view_definition from v_catalog.views where table_name like 'vertex_%' and table_schema='" . $source_schema . "';\" -A -t 2>&1",$outputAndErrors,$return_value);
 		print($outputAndErrors."\n");
 		$views = array();
 		foreach($outputAndErrors as $view_line) {
@@ -70,24 +73,40 @@ class SchemaMaterializer {
 			$fact_or_dim_node->resolveDependencies($fact_or_dim_node, $resolved, $unresolved);
 		}
 
-		$view_materializer = new \Kiva\Vertex\Admin\ViewMaterializer($this->db);
+		$view_materializer = new ViewMaterializer($this->db);
 
 		print("--------- dependency list ---------\n");
 		foreach($resolved as $node) {
 			$node->printNodeAndDependencies();
-
-			//$view_name = $node->getName();
-			//print($view_name . "\n");
 		}
 
-		// materialize the views in the resolved order
 		print("--------- materializing... ---------\n");
+//////////////////
+/*
+// if we want to materialize from one schema to another, we need to copy tables over too
+		$result = $this->db->query("select table_name
+		from v_catalog.tables
+		where table_schema='" . $source_schema . "'");
+		$table_name_rows = $result->fetchAll();
+
+		foreach($table_name_rows as $table_name_row) {
+			$full_table_name = $table_name_row['table_name'];
+
+			print("copying table: " . $full_table_name . " | ");
+			$start = time();
+			$view_materializer->materialize($full_table_name, $this->destination_schema);
+			$end = time();
+			print($end - $start . " second(s)\n");
+		}
+*/
+///////////////
+		// materialize the views in the resolved order in the default schema
+
 		foreach($resolved as $node) {
-			$view_name = $schema_name . "." . $node->getName();
 			$view_name = $node->getName();
 			print("materializing: " . $view_name . " | ");
 			$start = time();
-			$view_materializer->materialize($view_name);
+			$view_materializer->materializeInPlace($view_name);
 			$end = time();
 			print($end - $start . " second(s)\n");
 		}
@@ -102,5 +121,5 @@ Find and materialize views from the given schema in place\n");
 	exit;
 }
 $runner = new SchemaMaterializer();
-$schema_name = $argv[1];
-$runner->run($schema_name);
+$source_schema = $argv[1];
+$runner->run($source_schema);
