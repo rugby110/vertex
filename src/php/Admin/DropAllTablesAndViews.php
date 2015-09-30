@@ -6,6 +6,7 @@
 class DropAllTablesAndViews {
 	protected $user;
 	protected $pwd;
+	protected $schema;
 	protected $db;
 
 	protected $reference_schema;
@@ -16,6 +17,7 @@ class DropAllTablesAndViews {
 
 		$this->user = getenv("vertex_vertica_user");
 		$this->pwd = getenv("vertex_vertica_password");
+		$this->schema = getenv("vertex_vertica_vertex_schema");
 		$this->odbc_dsn = getenv("vertex_vertica_odbc_dsn");
 
 		try {
@@ -25,7 +27,7 @@ class DropAllTablesAndViews {
 			echo $e->getMessage() . "\n";
 		}
 
-		print("Do you really want to delete all tables and views in your schema?(y/n)");
+		print("Do you really want to delete all tables and views in schema '" . $this->schema . "'?(y/n)");
 		$input = trim(fgets(STDIN));
 
 		if ($input != 'y') {
@@ -34,7 +36,7 @@ class DropAllTablesAndViews {
 
 		$result = $this->db->query("select table_name
 		from v_catalog.tables
-		where table_schema='van'");
+		where table_schema='" . $this->schema . "'");
 		$table_name_rows = $result->fetchAll();
 
 		$statements_run = 0;
@@ -55,7 +57,7 @@ class DropAllTablesAndViews {
 
 		$result = $this->db->query("select table_name
 		from v_catalog.views
-		where table_schema='van'");
+		where table_schema='" . $this->schema . "'");
 		$table_name_rows = $result->fetchAll();
 
 		$statements_run = 0;

@@ -21,6 +21,7 @@ grant authentication host_pass to vertex;
 grant vertex_admin_view_role to vertex;
 alter user vertex default role vertex_admin_role;
 create schema IF NOT EXISTS vertex AUTHORIZATION vertex;
+create schema IF NOT EXISTS vertex_materialized AUTHORIZATION vertex;
 create schema IF NOT EXISTS ods_kiva AUTHORIZATION vertex;
 
 -- verse user and related schema
@@ -39,11 +40,14 @@ grant all on schema ods_kiva to vertex_admin_role;
 grant all on all tables in schema vertex to vertex_admin_role with grant option;
 grant all on schema vertex to vertex_admin_role;
 grant all on all tables in schema vertex to vertex_admin_role with grant option;
+grant all on schema vertex_materialized to vertex_admin_role;
+grant all on all tables in schema vertex_materialized to vertex_admin_role with grant option;
 
 -- grants for the vertex_read_only_view_role
 grant usage on schema ods_kiva to vertex_read_only_view_role;
 grant select on all tables in schema ods_kiva to vertex_read_only_view_role;
 grant usage on schema vertex to vertex_read_only_view_role;
+grant usage on schema vertex_materialized to vertex_read_only_view_role;
 grant select on all tables in schema vertex to vertex_read_only_view_role;
 grant usage on schema verse to vertex_read_only_view_role;
 grant select on all tables in schema verse to vertex_read_only_view_role;
