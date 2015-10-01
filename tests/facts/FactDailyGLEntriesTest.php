@@ -2,17 +2,20 @@
 
 class FactDailyGLEntriesTest extends Kiva\Vertex\Testing\VertexTestCase {
 
-	/**
 	public function testCount() {
-		$result = $this->db->query("select count(1) as how_many from $this->vertex_schema.vertex_fact_daily_gl_entries");
+		$result = $this->db->query("
+			select count(1) as how_many from $this->vertex_schema.vertex_fact_daily_gl_entries
+			where effective_day_id > '20150602'");
 		$count_from_fact = $result->fetchColumn();
 
-		$result = $this->db->query("select count(1) as how_many from $this->reference_schema.verse_fact_daily_gl_entries");
+		$result = $this->db->query("
+			select count(1) as how_many from $this->reference_schema.verse_fact_daily_gl_entries gl
+			inner join $this->reference_schema.verse_dim_credit_change_type dim_cct on gl.dim_credit_change_type_id = dim_cct.v_id
+			where dim_effective_day_id > '20150602' and dim_cct.source_table_name = 'ledger_credit_change'");
 		$count_from_ods = $result->fetchColumn();
 
 		$this->assertEquals($count_from_ods,$count_from_fact);
 	}
-	 */
 
 	public function testCreditChangeTypeIdCount() {
 		$result = $this->db->query("select count(1) as how_many
@@ -47,20 +50,17 @@ class FactDailyGLEntriesTest extends Kiva\Vertex\Testing\VertexTestCase {
 		$this->assertSame($count_from_verse,$count_from_vertex);
 	}
 
-
-	//TODO: These tests are failing, the counts are off. Need to figure out how to get these counts to match up.
-	/**
 	public function testContractEntityIdCount() {
 		$result = $this->db->query("select count(1) as how_many
 			from $this->vertex_schema.vertex_fact_daily_gl_entries
-			where contract_entity_id > 0");
+			where effective_day_id > '20150602' and contract_entity_id > 0");
 		$count_from_vertex = $result->fetchColumn();
 
 		$result = $this->db->query("select count(1) as how_many
 			from $this->reference_schema.verse_fact_daily_gl_entries gl
 			left join $this->reference_schema.verse_dim_credit_change_type dim_cct on gl.dim_credit_change_type_id = dim_cct.v_id
-			left join $this->reference_schema.verse_dim_managed_account dim_ma on gl.dim_contract_entity_id = dim_ma.dim_contract_entity_id
-			where dim_effective_day_id > '20150602' and dim_ma.contract_entity_id > 0 and dim_cct.source_table_name = 'ledger_credit_change'");
+		  	left join $this->reference_schema.verse_dim_contract_entity dim_ce on gl.dim_contract_entity_id = dim_ce.v_id
+			where dim_effective_day_id > '20150602' and dim_ce.contract_entity_id > 0 and dim_cct.source_table_name = 'ledger_credit_change'");
 		$count_from_verse = $result->fetchColumn();
 
 		$this->assertSame($count_from_verse,$count_from_vertex);
@@ -69,7 +69,7 @@ class FactDailyGLEntriesTest extends Kiva\Vertex\Testing\VertexTestCase {
 	public function testPartnerIdCount() {
 		$result = $this->db->query("select count(1) as how_many
 			from $this->vertex_schema.vertex_fact_daily_gl_entries
-			where partner_id > 0");
+			where effective_day_id > '20150602' and partner_id > 0");
 		$count_from_vertex = $result->fetchColumn();
 
 		$result = $this->db->query("select count(1) as how_many
@@ -81,7 +81,6 @@ class FactDailyGLEntriesTest extends Kiva\Vertex\Testing\VertexTestCase {
 
 		$this->assertSame($count_from_verse,$count_from_vertex);
 	}
-	 */
 
 	public function testSample() {
 		$result = $this->db->query("select effective_day_id, gl.credit_change_type_id, accounting_category_id,
